@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Morety & Nys — Old-Economy Finance Partner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    /* ── RESET & BASE ────────────────────────────── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    :root {
+      --navy: #12213B;
+      --navy2: #1C3054;
+      --navy3: #0C1829;
+      --cream: #F5F0E8;
+      --cream2: #EDE6D8;
+      --gold: #C4973A;
+      --gold2: #8B6914;
+      --gold-lt: #E8C97A;
+      --white: #FFFFFF;
+      --muted: #8A9BB5;
+      --charcoal: #2C3E50;
+      --serif: 'Playfair Display', Georgia, serif;
+      --body: 'Source Serif 4', Georgia, serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    body {
+      background: var(--navy3);
+      color: var(--cream);
+      font-family: var(--body);
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ──────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 3rem;
+      height: 64px;
+      background: rgba(12, 24, 41, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(196, 151, 58, 0.18);
+    }
+
+    .nav-brand {
+      font-family: var(--serif);
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: 0.18em;
+      color: var(--white);
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    .nav-brand span {
+      color: var(--gold);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--gold);
+    }
+
+    /* ── SECTION SHARED ──────────────────────────── */
+    section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 6rem 3rem 5rem;
+      position: relative;
+    }
+
+    .section-tag {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+    }
+
+    h1,
+    h2 {
+      font-family: var(--serif);
+      line-height: 1.05;
+    }
+
+    /* ── FADE-IN ANIMATION ───────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 {
+      transition-delay: 0.1s;
+    }
+
+    .reveal-delay-2 {
+      transition-delay: 0.2s;
+    }
+
+    .reveal-delay-3 {
+      transition-delay: 0.3s;
+    }
+
+    .reveal-delay-4 {
+      transition-delay: 0.4s;
+    }
+
+    .reveal-delay-5 {
+      transition-delay: 0.5s;
+    }
+
+    .reveal-delay-6 {
+      transition-delay: 0.6s;
+    }
+
+    /* ── HERO ─────────────────────────────────────── */
+    #hero {
+      background: var(--navy);
+      min-height: 100vh;
+      justify-content: flex-end;
+      padding-bottom: 7rem;
+      overflow: hidden;
+    }
+
+    .hero-bg-mark {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 42vw;
+      height: 100%;
+      background: linear-gradient(135deg, transparent 40%, rgba(196, 151, 58, 0.06) 100%);
+      pointer-events: none;
+    }
+
+    .hero-bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(196, 151, 58, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(196, 151, 58, 0.04) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.8rem;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+    }
+
+    .hero-title {
+      font-size: clamp(4rem, 9vw, 8.5rem);
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      line-height: 0.95;
+      position: relative;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-rule {
+      width: 120px;
+      height: 3px;
+      background: var(--gold);
+      margin: 2.2rem 0;
+    }
+
+    .hero-sub {
+      font-size: 1.25rem;
+      font-weight: 300;
+      color: var(--cream);
+      font-style: italic;
+      max-width: 520px;
+      line-height: 1.6;
+    }
+
+    .hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 2.5rem;
+    }
+
+    .hero-pill {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.4rem 0.9rem;
+      border: 1px solid rgba(196, 151, 58, 0.45);
+      color: var(--gold-lt);
+      background: rgba(196, 151, 58, 0.07);
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .hero-scroll-line {
+      width: 36px;
+      height: 1px;
+      background: var(--muted);
+      animation: scrollLine 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollLine {
+
+      0%,
+      100% {
+        transform: scaleX(1);
+        opacity: 0.5;
+      }
+
+      50% {
+        transform: scaleX(1.5);
+        opacity: 1;
+      }
+    }
+
+    /* ── GOLD LEFT BAR ACCENT ─────────────────────── */
+    .left-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 5px;
+      background: var(--gold);
+    }
+
+    /* ── SECTION: SERVICE STACK ───────────────────── */
+    #services {
+      background: var(--cream);
+      color: var(--navy);
+      position: relative;
+    }
+
+    #services .left-bar {
+      background: var(--navy);
+    }
+
+    .services-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .services-inner h2 {
+      font-size: clamp(2.2rem, 4vw, 3.8rem);
+      color: var(--navy);
+      margin-bottom: 0.6rem;
+    }
+
+    .services-inner .sub {
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--gold2);
+      margin-bottom: 3rem;
+    }
+
+    .service-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      margin-bottom: 3.5rem;
+    }
+
+    .service-cell {
+      background: var(--cream);
+      padding: 1.8rem 2rem;
+      position: relative;
+      transition: background 0.25s;
+    }
+
+    .service-cell:hover {
+      background: var(--white);
+    }
+
+    .service-cell .num {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: var(--gold);
+      letter-spacing: 0.2em;
+      margin-bottom: 0.6rem;
+    }
+
+    .service-cell h3 {
+      font-family: var(--serif);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+
+    .service-cell p {
+      font-size: 0.9rem;
+      color: var(--charcoal);
+      line-height: 1.65;
+    }
+
+    .service-cell::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--gold);
+      transform: scaleY(0);
+      transition: transform 0.3s ease;
+      transform-origin: bottom;
+    }
+
+    .service-cell:hover::before {
+      transform: scaleY(1);
+    }
+
+    .who-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold2);
+      margin-bottom: 1.2rem;
+    }
+
+    .who-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+    }
+
+    .who-card {
+      background: var(--white);
+      border-top: 3px solid var(--gold);
+      padding: 1.5rem;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    }
+
+    .who-card h4 {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+
+    .who-card p {
+      font-size: 0.85rem;
+      color: var(--charcoal);
+      line-height: 1.6;
+    }
+
+    /* ── SECTION: PACKAGES ────────────────────────── */
+    #packages {
+      background: var(--navy);
+      position: relative;
+    }
+
+    .packages-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .packages-inner h2 {
+      font-size: clamp(2.2rem, 4vw, 3.8rem);
+      color: var(--white);
+      margin-bottom: 0.6rem;
+    }
+
+    .packages-inner .sub {
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--muted);
+      margin-bottom: 3rem;
+    }
+
+    .pkg-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .pkg-table thead tr {
+      background: var(--gold);
+    }
+
+    .pkg-table thead th {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--navy);
+      text-align: left;
+      padding: 1rem 1.4rem;
+      font-weight: 500;
+    }
+
+    .pkg-table tbody tr {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      transition: background 0.2s;
+    }
+
+    .pkg-table tbody tr:nth-child(odd) {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .pkg-table tbody tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    .pkg-table tbody tr:hover {
+      background: rgba(196, 151, 58, 0.08);
+    }
+
+    .pkg-table td {
+      padding: 1.6rem 1.4rem;
+      vertical-align: top;
+      position: relative;
+    }
+
+    .pkg-table td:first-child {
+      border-left: 3px solid var(--gold);
+    }
+
+    .pkg-name {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.25rem;
+      line-height: 1.3;
+    }
+
+    .pkg-q {
+      font-size: 0.95rem;
+      font-style: italic;
+      color: var(--cream);
+      line-height: 1.55;
+    }
+
+    .pkg-outcome {
+      font-size: 0.95rem;
+      color: var(--gold-lt);
+      line-height: 1.55;
+    }
+
+    /* ── SECTION: GO-TO-MARKET ────────────────────── */
+    #gtm {
+      background: var(--cream2);
+      color: var(--navy);
+      position: relative;
+    }
+
+    #gtm .left-bar {
+      background: var(--navy);
+    }
+
+    .gtm-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .gtm-inner h2 {
+      font-size: clamp(2.2rem, 4vw, 3.8rem);
+      color: var(--navy);
+      margin-bottom: 0.6rem;
+    }
+
+    .gtm-inner .sub {
+      font-size: 1.05rem;
+      font-style: italic;
+      color: var(--gold2);
+      margin-bottom: 3rem;
+    }
+
+    .funnel-cols {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      position: relative;
+    }
+
+    .funnel-col {
+      position: relative;
+      padding: 2rem 1.6rem;
+      background: var(--navy);
+      color: var(--cream);
+    }
+
+    .funnel-col:nth-child(2) {
+      background: #1C4A6E;
+    }
+
+    .funnel-col:nth-child(3) {
+      background: var(--charcoal);
+    }
+
+    .funnel-col:nth-child(4) {
+      background: var(--gold2);
+    }
+
+    .funnel-col::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gold);
+    }
+
+    .funnel-col:nth-child(4)::before {
+      background: var(--navy);
+    }
+
+    .funnel-arrow {
+      position: absolute;
+      right: -14px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      width: 0;
+      height: 0;
+      border-top: 14px solid transparent;
+      border-bottom: 14px solid transparent;
+      border-left: 14px solid var(--navy);
+    }
+
+    .funnel-col:nth-child(2) .funnel-arrow {
+      border-left-color: #1C4A6E;
+    }
+
+    .funnel-col:nth-child(3) .funnel-arrow {
+      border-left-color: var(--charcoal);
+    }
+
+    .funnel-col-label {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      line-height: 1.4;
+    }
+
+    .funnel-col:nth-child(4) .funnel-col-label {
+      color: var(--navy);
+    }
+
+    .funnel-rule {
+      width: 100%;
+      height: 1px;
+      background: rgba(196, 151, 58, 0.3);
+      margin-bottom: 1.2rem;
+    }
+
+    .funnel-col:nth-child(4) .funnel-rule {
+      background: rgba(12, 24, 41, 0.2);
+    }
+
+    .funnel-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .funnel-list li {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: rgba(245, 240, 232, 0.88);
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .funnel-col:nth-child(4) .funnel-list li {
+      color: var(--navy3);
+    }
+
+    .funnel-list li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-size: 0.7rem;
+    }
+
+    .funnel-col:nth-child(4) .funnel-list li::before {
+      color: var(--navy);
+    }
+
+    /* ── SECTION: BRAND & CLOSE ──────────────────── */
+    #brand {
+      background: var(--navy3);
+      position: relative;
+      min-height: auto;
+      padding-top: 8rem;
+      padding-bottom: 8rem;
+    }
+
+    .brand-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+
+    .brand-left h2 {
+      font-size: clamp(2rem, 3.5vw, 3.2rem);
+      color: var(--white);
+      margin-bottom: 0.6rem;
+    }
+
+    .brand-left .sub {
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+    }
+
+    .brand-pillars {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: rgba(196, 151, 58, 0.12);
+    }
+
+    .brand-pillar {
+      background: var(--navy2);
+      padding: 1.5rem;
+      position: relative;
+      transition: background 0.2s;
+    }
+
+    .brand-pillar:hover {
+      background: #1e3560;
+    }
+
+    .brand-pillar::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: var(--gold);
+    }
+
+    .brand-pillar h4 {
+      font-family: var(--serif);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+
+    .brand-pillar p {
+      font-size: 0.83rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .brand-right {
+      background: var(--gold);
+      padding: 3.5rem;
+      position: relative;
+    }
+
+    .brand-right::before {
+      content: '"';
+      position: absolute;
+      top: -0.5rem;
+      left: 2rem;
+      font-family: var(--serif);
+      font-size: 8rem;
+      line-height: 1;
+      color: rgba(12, 24, 41, 0.15);
+      pointer-events: none;
+    }
+
+    .brand-quote {
+      font-family: var(--serif);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--navy);
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+    }
+
+    .brand-quote em {
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .brand-cta-sub {
+      font-size: 0.95rem;
+      color: var(--navy2);
+      font-style: italic;
+      margin-bottom: 2rem;
+      line-height: 1.55;
+    }
+
+    .cta-line {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--navy);
+      font-weight: 500;
+    }
+
+    .cta-line::before {
+      content: '';
+      display: block;
+      width: 30px;
+      height: 2px;
+      background: var(--navy);
+    }
+
+    /* ── FOOTER ──────────────────────────────────── */
+    footer {
+      background: var(--navy3);
+      border-top: 1px solid rgba(196, 151, 58, 0.18);
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-brand {
+      font-family: var(--serif);
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--white);
+    }
+
+    .footer-brand span {
+      color: var(--gold);
+    }
+
+    .footer-note {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    /* ── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 900px) {
+      nav {
+        padding: 0 1.5rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      section {
+        padding: 5rem 1.5rem 4rem;
+      }
+
+      .service-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .who-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .funnel-cols {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .funnel-arrow {
+        display: none;
+      }
+
+      .brand-inner {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+
+      .pkg-table thead {
+        display: none;
+      }
+
+      .pkg-table,
+      .pkg-table tbody,
+      .pkg-table tr,
+      .pkg-table td {
+        display: block;
+      }
+
+      .pkg-table tr {
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .pkg-table td {
+        border-left: none;
+      }
+
+      .pkg-table td:first-child {
+        border-left: 3px solid var(--gold);
+      }
+
+      footer {
+        flex-direction: column;
+        gap: 0.8rem;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .funnel-cols {
+        grid-template-columns: 1fr;
+      }
+
+      .brand-pillars {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── NAV ───────────────────────────────────────── -->
+  <nav>
+    <a class="nav-brand" href="#hero">Morety <span>&</span> Nys</a>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#packages">Packages</a></li>
+      <li><a href="#gtm">Go-to-Market</a></li>
+      <li><a href="#brand">Brand</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── HERO ──────────────────────────────────────── -->
+  <section id="hero">
+    <div class="left-bar"></div>
+    <div class="hero-bg-grid"></div>
+    <div class="hero-bg-mark"></div>
+
+    <div class="hero-eyebrow reveal">Old-Economy Finance Partner</div>
+
+    <h1 class="hero-title reveal reveal-delay-1">
+      Morety<br /><em>&amp; Nys</em>
+    </h1>
+
+    <div class="hero-rule reveal reveal-delay-2"></div>
+
+    <p class="hero-sub reveal reveal-delay-3">
+      Real finance for bootstrapped SMBs, factories, and suppliers.<br />
+      No startup theatre. No buzzwords. Just control.
+    </p>
+
+    <div class="hero-pills reveal reveal-delay-4">
+      <span class="hero-pill">Business Restructuring</span>
+      <span class="hero-pill">M&amp;A</span>
+      <span class="hero-pill">Business Valuation</span>
+      <span class="hero-pill">Fractional CFO</span>
+      <span class="hero-pill">LBO &amp; Deal Work</span>
+    </div>
+
+    <div class="hero-scroll">
+      <span class="hero-scroll-line"></span>
+      Scroll to explore
+    </div>
+  </section>
+
+  <!-- ── SERVICES ───────────────────────────────────── -->
+  <section id="services">
+    <div class="left-bar"></div>
+    <div class="services-inner">
+      <div class="section-tag reveal">01 — Service Stack</div>
+      <h2 class="reveal reveal-delay-1">What We Do</h2>
+      <p class="sub reveal reveal-delay-2">
+        All aimed at boring, bootstrapped SMBs, factories, suppliers.
+      </p>
+
+      <div class="service-grid">
+        <div class="service-cell reveal reveal-delay-1">
+          <div class="num">01</div>
+          <h3>Business Restructuring</h3>
+          <p>When the structure no longer fits the reality. We rebuild from the numbers up — operational, financial, and
+            organisational.</p>
+        </div>
+        <div class="service-cell reveal reveal-delay-2">
+          <div class="num">02</div>
+          <h3>M&amp;A Advisory</h3>
+          <p>Buy-side or sell-side. We handle the financial due diligence, deal structuring, and negotiation support
+            that actually moves transactions.</p>
+        </div>
+        <div class="service-cell reveal reveal-delay-3">
+          <div class="num">03</div>
+          <h3>Business Valuation</h3>
+          <p>For exits, succession, disputes, or just knowing where you stand. Credible, defensible, owner-readable
+            valuations.</p>
+        </div>
+        <div class="service-cell reveal reveal-delay-4">
+          <div class="num">04</div>
+          <h3>Fractional CFO</h3>
+          <p>Ongoing financial leadership without the full-time cost. Budgets, variances, cash flow, KPIs — kept sharp,
+            every month.</p>
+        </div>
+        <div class="service-cell reveal reveal-delay-5">
+          <div class="num">05</div>
+          <h3>Financial Projection &amp; Planning</h3>
+          <p>Bank-ready, investor-ready numbers with a story behind them. Growth plans, capex decisions, and hire
+            modelling done properly.</p>
+        </div>
+        <div class="service-cell reveal reveal-delay-6">
+          <div class="num">06</div>
+          <h3>LBO &amp; Software-Deal Style Work</h3>
+          <p>Private equity-grade analysis brought to old-economy deals. Returns modelling, debt structuring, management
+            incentive design.</p>
+        </div>
+      </div>
+
+      <p class="who-label reveal">↓ Who we serve</p>
+      <div class="who-cards">
+        <div class="who-card reveal reveal-delay-1">
+          <h4>Automotive suppliers &amp; factories</h4>
+          <p>Tier 1–3 suppliers, traditional manufacturers under margin pressure or facing ownership transition.</p>
+        </div>
+        <div class="who-card reveal reveal-delay-2">
+          <h4>Old / evolving businesses</h4>
+          <p>Long-established firms with succession gaps, legacy structures, or businesses navigating a step-change in
+            complexity.</p>
+        </div>
+        <div class="who-card reveal reveal-delay-3">
+          <h4>"Boring" SMBs needing real finance</h4>
+          <p>Not slides. Not pitch decks. Owners who want actual numbers, real analysis, and a controller who speaks
+            plainly.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PACKAGES ───────────────────────────────────── -->
+  <section id="packages">
+    <div class="left-bar"></div>
+    <div class="packages-inner">
+      <div class="section-tag reveal">02 — Packages &amp; Outcomes</div>
+      <h2 class="reveal reveal-delay-1">Packages → Outcomes</h2>
+      <p class="sub reveal reveal-delay-2">
+        Four entry points. All designed around the owner's real question.
+      </p>
+
+      <table class="pkg-table reveal reveal-delay-3">
+        <thead>
+          <tr>
+            <th>Package</th>
+            <th>Owner Question</th>
+            <th>Outcome</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="pkg-name">Financial Health Assessment</div>
+            </td>
+            <td>
+              <div class="pkg-q">"Where / how am I going?"</div>
+            </td>
+            <td>
+              <div class="pkg-outcome">Clarity, simple score/report + concrete to-dos</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="pkg-name">Financial Projection &amp; Planning</div>
+            </td>
+            <td>
+              <div class="pkg-q">"Can I afford this plan?" (growth / capex / hires)</div>
+            </td>
+            <td>
+              <div class="pkg-outcome">Bank- and investor-ready numbers &amp; story</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="pkg-name">Succession / Exit Readiness</div>
+            </td>
+            <td>
+              <div class="pkg-q">"How do I get out well?" (sell / hand over)</div>
+            </td>
+            <td>
+              <div class="pkg-outcome">Deal structure, valuation, and clean data room</div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="pkg-name">Fractional CFO (ongoing support)</div>
+            </td>
+            <td>
+              <div class="pkg-q">"Who keeps an eye on this?"</div>
+            </td>
+            <td>
+              <div class="pkg-outcome">Ongoing control: budgets, variances, cash, KPIs</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── GO-TO-MARKET ───────────────────────────────── -->
+  <section id="gtm">
+    <div class="left-bar"></div>
+    <div class="gtm-inner">
+      <div class="section-tag reveal">03 — Go-to-Market Funnel</div>
+      <h2 class="reveal reveal-delay-1">How We Find &amp; Win Owners</h2>
+      <p class="sub reveal reveal-delay-2">
+        From first contact to 45-minute review call.
+      </p>
+
+      <div class="funnel-cols">
+        <div class="funnel-col reveal reveal-delay-1">
+          <div class="funnel-col-label">Top of Funnel</div>
+          <div class="funnel-rule"></div>
+          <ul class="funnel-list">
+            <li>Website</li>
+            <li>Email outreach</li>
+            <li>LinkedIn</li>
+            <li>Phone calls</li>
+            <li>In-person visits</li>
+            <li>Business cards / simple one-pager</li>
+          </ul>
+          <div class="funnel-arrow"></div>
+        </div>
+
+        <div class="funnel-col reveal reveal-delay-2">
+          <div class="funnel-col-label">Nurture Layer</div>
+          <div class="funnel-rule"></div>
+          <ul class="funnel-list">
+            <li>Newsletter = "overcommunicate"</li>
+            <li>Short, practical emails: problems, mini-cases, checklists for owners</li>
+            <li>Always point back to the free Financial Health Score</li>
+          </ul>
+          <div class="funnel-arrow"></div>
+        </div>
+
+        <div class="funnel-col reveal reveal-delay-3">
+          <div class="funnel-col-label">Partners &amp; Referrers</div>
+          <div class="funnel-rule"></div>
+          <ul class="funnel-list">
+            <li>Local banks (corporate / SME officers)</li>
+            <li>Lawyers, accountants, small M&amp;A boutiques, industry associations</li>
+            <li>Give them the score/report as a tool for their clients</li>
+          </ul>
+          <div class="funnel-arrow"></div>
+        </div>
+
+        <div class="funnel-col reveal reveal-delay-4">
+          <div class="funnel-col-label">Core Conversion Asset</div>
+          <div class="funnel-rule"></div>
+          <ul class="funnel-list">
+            <li>Owner fills 8–12 key numbers</li>
+            <li>You send back: 1-page score + 2–3 recommended next actions</li>
+            <li>CTA: "Let's review this together in 45 minutes"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BRAND & CLOSE ──────────────────────────────── -->
+  <section id="brand">
+    <div class="brand-inner">
+      <div class="brand-left">
+        <div class="section-tag reveal">04 — Brand &amp; Tone</div>
+        <h2 class="reveal reveal-delay-1">How We Show Up</h2>
+        <p class="sub reveal reveal-delay-2">The feel of a trusted controller. The sharpness of a deal sherpa.</p>
+
+        <div class="brand-pillars">
+          <div class="brand-pillar reveal reveal-delay-1">
+            <h4>Professional but casual</h4>
+            <p>No stiff suits, no startup hoodies. We talk like someone who's seen it all and doesn't need to perform.
+            </p>
+          </div>
+          <div class="brand-pillar reveal reveal-delay-2">
+            <h4>Practical &amp; tangible</h4>
+            <p>Every output is actionable. Not a theory. Numbers and next steps.</p>
+          </div>
+          <div class="brand-pillar reveal reveal-delay-3">
+            <h4>No buzzwords</h4>
+            <p>Zero startup theatre. We say "this is costing you €40k/year" — not "leverage synergies".</p>
+          </div>
+          <div class="brand-pillar reveal reveal-delay-4">
+            <h4>Trusted deal sherpa</h4>
+            <p>We guide owners through unfamiliar terrain — exits, restructurings, growth — without drama.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="brand-right reveal reveal-delay-2">
+        <p class="brand-quote">
+          The business you build<br />
+          deserves <em>real</em> finance.
+        </p>
+        <p class="brand-cta-sub">
+          Not more slides. Not another consultant with a framework.<br />
+          A controller who gives a damn about your numbers.
+        </p>
+        <div class="cta-line">morety-nys.com</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ─────────────────────────────────────── -->
+  <footer>
+    <div class="footer-brand">Morety <span>&</span> Nys</div>
+    <div class="footer-note">Old-Economy Finance Partner — © 2025</div>
+  </footer>
+
+  <!-- ── SCROLL REVEAL ──────────────────────────────── -->
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    reveals.forEach(el => observer.observe(el));
+
+    // Immediately reveal hero elements
+    document.querySelectorAll('#hero .reveal').forEach(el => {
+      setTimeout(() => el.classList.add('visible'), 100);
+    });
+  </script>
+
+</body>
+
+</html>
