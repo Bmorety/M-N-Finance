@@ -1,1230 +1,1645 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-view="client">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Morety & Nys — Old-Economy Finance Partner</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
-    rel="stylesheet" />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Morety & Nys — Financial Advisory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    /* ── RESET & BASE  change v2────────────────────────────── */
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-      font-size: 16px;
-    }
-
+    /* ─── TOKENS ──────────────────────────────────────────────── */
     :root {
-      --navy: #12213B;
-      --navy2: #1C3054;
-      --navy3: #0C1829;
-      --cream: #F5F0E8;
-      --cream2: #EDE6D8;
-      --gold: #C4973A;
-      --gold2: #8B6914;
-      --gold-lt: #E8C97A;
-      --white: #FFFFFF;
-      --muted: #8A9BB5;
-      --charcoal: #2C3E50;
-      --serif: 'Playfair Display', Georgia, serif;
-      --body: 'Source Serif 4', Georgia, serif;
-      --mono: 'JetBrains Mono', monospace;
+      --ink:              #111827;
+      --ink2:             #1a2535;
+      --paper:            #F8F8F6;
+      --paper2:           #EFEFEC;
+      --white:            #FFFFFF;
+      --blue:             #1D4ED8;
+      --blue-hover:       #1e40af;
+      --blue-pale:        #DBEAFE;
+      --muted:            #6B7280;
+      --muted-lt:         #9CA3AF;
+      --border-dark:      rgba(255,255,255,0.08);
+      --border-light:     rgba(0,0,0,0.09);
+      --internal-bg:      #0F172A;
+      --internal-accent:  #38BDF8;
+
+      --serif:  'DM Serif Display', Georgia, serif;
+      --sans:   'IBM Plex Sans', system-ui, sans-serif;
+      --mono:   'IBM Plex Mono', 'Courier New', monospace;
+
+      --max-w:  1080px;
+      --bar-h:  44px;
+      --nav-h:  60px;
     }
 
+    /* ─── RESET ───────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
-      background: var(--navy3);
-      color: var(--cream);
-      font-family: var(--body);
-      font-weight: 300;
-      overflow-x: hidden;
+      font-family: var(--sans);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--paper);
+      padding-top: calc(var(--bar-h) + var(--nav-h));
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+    button { cursor: pointer; font-family: inherit; border: none; background: none; }
+
+    /* ─── VIEW BAR ────────────────────────────────────────────── */
+    .view-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--bar-h);
+      background: #0a0f1a;
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .view-bar-label {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+    }
+    .view-toggle {
+      display: flex;
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px;
+      padding: 3px;
+      gap: 2px;
+    }
+    .view-toggle-btn {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 3px;
+      color: rgba(255,255,255,0.45);
+      transition: all 0.15s;
+    }
+    .view-toggle-btn.active {
+      background: var(--blue);
+      color: var(--white);
+    }
+    .view-toggle-btn:hover:not(.active) {
+      color: rgba(255,255,255,0.75);
+    }
+    .internal-warning {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.16em;
+      color: var(--internal-accent);
+      text-transform: uppercase;
+      position: absolute;
+      right: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
     }
 
-    /* ── NAV ──────────────────────────────────────── */
+    /* ─── NAV ─────────────────────────────────────────────────── */
     nav {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
+      top: var(--bar-h);
+      left: 0; right: 0;
+      height: var(--nav-h);
+      background: rgba(17,24,39,0.96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 200;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 3rem;
-      height: 64px;
-      background: rgba(12, 24, 41, 0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(196, 151, 58, 0.18);
+      padding: 0 2.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
     }
-
     .nav-brand {
       font-family: var(--serif);
-      font-weight: 700;
       font-size: 1.05rem;
-      letter-spacing: 0.18em;
       color: var(--white);
-      text-transform: uppercase;
-      text-decoration: none;
+      letter-spacing: 0.01em;
     }
-
-    .nav-brand span {
-      color: var(--gold);
-    }
-
     .nav-links {
       display: flex;
-      gap: 2.5rem;
-      list-style: none;
+      gap: 2rem;
     }
-
     .nav-links a {
       font-family: var(--mono);
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--muted);
-      text-decoration: none;
-      transition: color 0.2s;
+      color: var(--muted-lt);
+      transition: color 0.15s;
+    }
+    .nav-links a:hover { color: var(--white); }
+
+    /* ─── CONTAINER ───────────────────────────────────────────── */
+    .container {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 2.5rem;
     }
 
-    .nav-links a:hover {
-      color: var(--gold);
-    }
-
-    /* ── SECTION SHARED ──────────────────────────── */
-    section {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 6rem 3rem 5rem;
-      position: relative;
-    }
-
+    /* ─── SECTION TAG ─────────────────────────────────────────── */
     .section-tag {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted-lt);
+      display: block;
+      margin-bottom: 1.5rem;
+    }
+    .section-tag.on-dark { color: rgba(255,255,255,0.35); }
+    .section-tag.internal { color: var(--internal-accent); }
+
+    /* ─── REVEAL ANIMATION ────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.2s; }
+    .reveal-d3 { transition-delay: 0.3s; }
+    .reveal-d4 { transition-delay: 0.4s; }
+
+    /* ════════════════════════════════════════════════════════════
+       CLIENT VIEW
+    ════════════════════════════════════════════════════════════ */
+
+    /* ─── HERO ────────────────────────────────────────────────── */
+    #hero {
+      background: var(--ink);
+      min-height: calc(100vh - var(--bar-h) - var(--nav-h));
+      display: flex;
+      align-items: center;
+      padding: 6rem 0 5rem;
+    }
+    .hero-inner {
+      max-width: 680px;
+    }
+    .hero-eyebrow {
       font-family: var(--mono);
       font-size: 0.65rem;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1.2rem;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 2rem;
+      display: block;
     }
-
-    h1,
-    h2 {
+    .hero-title {
       font-family: var(--serif);
-      line-height: 1.05;
+      font-size: clamp(2.8rem, 6vw, 4.4rem);
+      line-height: 1.08;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+      font-weight: 400;
     }
-
-    /* ── FADE-IN ANIMATION ───────────────────────── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
+    .hero-rule {
+      width: 72px;
+      height: 1px;
+      background: var(--blue);
+      margin-bottom: 1.5rem;
     }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
+    .hero-sub {
+      font-size: 1.05rem;
+      line-height: 1.65;
+      color: var(--muted-lt);
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
     }
-
-    .reveal-delay-1 {
-      transition-delay: 0.1s;
+    .hero-cta-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
     }
-
-    .reveal-delay-2 {
-      transition-delay: 0.2s;
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--blue);
+      color: var(--white);
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      font-weight: 500;
+      padding: 0.8rem 1.6rem;
+      border-radius: 3px;
+      transition: background 0.15s;
+      letter-spacing: 0.01em;
+      border: none;
+      cursor: pointer;
     }
-
-    .reveal-delay-3 {
-      transition-delay: 0.3s;
+    .btn-primary:hover { background: var(--blue-hover); }
+    .hero-microcopy {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      color: rgba(255,255,255,0.28);
+      letter-spacing: 0.04em;
     }
-
-    .reveal-delay-4 {
-      transition-delay: 0.4s;
-    }
-
-    .reveal-delay-5 {
-      transition-delay: 0.5s;
-    }
-
-    .reveal-delay-6 {
-      transition-delay: 0.6s;
-    }
-
-    /* ── HERO ─────────────────────────────────────── */
-    #hero {
-      background: var(--navy);
-      min-height: 100vh;
-      justify-content: flex-end;
-      padding-bottom: 7rem;
-      overflow: hidden;
-    }
-
-    .hero-bg-mark {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 42vw;
-      height: 100%;
-      background: linear-gradient(135deg, transparent 40%, rgba(196, 151, 58, 0.06) 100%);
-      pointer-events: none;
-    }
-
-    .hero-bg-grid {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(196, 151, 58, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(196, 151, 58, 0.04) 1px, transparent 1px);
-      background-size: 80px 80px;
-      pointer-events: none;
-    }
-
-    .hero-eyebrow {
+    .hero-ghost-link {
       font-family: var(--mono);
       font-size: 0.68rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1.8rem;
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.4);
+      margin-top: 0.25rem;
+      transition: color 0.15s;
     }
+    .hero-ghost-link:hover { color: rgba(255,255,255,0.7); }
 
-    .hero-eyebrow::before {
-      content: '';
-      display: inline-block;
-      width: 40px;
-      height: 1px;
-      background: var(--gold);
+    /* ─── SERVICES ────────────────────────────────────────────── */
+    #services {
+      background: var(--paper);
+      padding: 6rem 0;
+      border-top: 1px solid var(--border-light);
     }
-
-    .hero-title {
-      font-size: clamp(4rem, 9vw, 8.5rem);
-      font-weight: 900;
-      color: var(--white);
-      letter-spacing: -0.02em;
-      line-height: 0.95;
-      position: relative;
+    .services-header {
+      margin-bottom: 3.5rem;
     }
-
-    .hero-title em {
-      font-style: italic;
-      color: var(--gold);
+    .services-title {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      line-height: 1.15;
+      color: var(--ink);
+      margin-bottom: 0.75rem;
     }
-
-    .hero-rule {
-      width: 120px;
-      height: 3px;
-      background: var(--gold);
-      margin: 2.2rem 0;
-    }
-
-    .hero-sub {
-      font-size: 1.25rem;
+    .services-sub {
+      font-size: 0.95rem;
+      color: var(--muted);
+      max-width: 480px;
       font-weight: 300;
-      color: var(--cream);
-      font-style: italic;
-      max-width: 520px;
+    }
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .pillar-card {
+      background: var(--white);
+      border: 1px solid var(--border-light);
+      border-top: 3px solid var(--blue);
+      padding: 2.2rem 2rem;
+    }
+    .pillar-label {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+    .pillar-title {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      color: var(--ink);
+      margin-bottom: 0.6rem;
+      font-weight: 400;
+    }
+    .pillar-desc {
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-weight: 300;
+      margin-bottom: 1.4rem;
       line-height: 1.6;
     }
-
-    .hero-pills {
+    .pillar-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .pillar-list li {
+      font-size: 0.85rem;
+      color: #374151;
+      padding-left: 1rem;
+      position: relative;
+    }
+    .pillar-list li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--blue);
+      font-size: 0.7rem;
+    }
+    .exit-tracks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.4rem;
+    }
+    .exit-track {
+      background: var(--paper);
+      border: 1px solid var(--border-light);
+      border-left: 2px solid var(--blue);
+      padding: 1rem 1.1rem;
+    }
+    .exit-track-title {
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.35rem;
+    }
+    .exit-track-desc {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 300;
+      line-height: 1.5;
+    }
+    .who-chips {
       display: flex;
       flex-wrap: wrap;
       gap: 0.6rem;
-      margin-top: 2.5rem;
     }
-
-    .hero-pill {
+    .who-chip {
       font-family: var(--mono);
       font-size: 0.62rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      padding: 0.4rem 0.9rem;
-      border: 1px solid rgba(196, 151, 58, 0.45);
-      color: var(--gold-lt);
-      background: rgba(196, 151, 58, 0.07);
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      border: 1px solid var(--border-light);
+      padding: 0.45rem 0.9rem;
+      border-radius: 100px;
+      background: var(--white);
     }
 
-    .hero-scroll {
+    /* ─── PACKAGES ────────────────────────────────────────────── */
+    #packages {
+      background: var(--ink2);
+      padding: 6rem 0;
+    }
+    .packages-header {
+      margin-bottom: 3rem;
+    }
+    .packages-title {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      line-height: 1.15;
+      color: var(--white);
+      margin-bottom: 0.75rem;
+    }
+    .packages-sub {
+      font-size: 0.95rem;
+      color: var(--muted-lt);
+      font-weight: 300;
+    }
+    .packages-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 3rem;
+    }
+    .pkg-card {
+      background: rgba(255,255,255,0.02);
+      border-left: 3px solid var(--blue);
+      padding: 2rem 1.8rem;
+      transition: background 0.15s;
+    }
+    .pkg-card:hover { background: rgba(255,255,255,0.05); }
+    .pkg-name {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+      font-weight: 400;
+    }
+    .pkg-question {
+      font-size: 0.85rem;
+      font-style: italic;
+      color: var(--muted-lt);
+      margin-bottom: 1.1rem;
+      font-weight: 300;
+    }
+    .pkg-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .pkg-list li {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+      padding-left: 0.9rem;
+      position: relative;
+      font-weight: 300;
+    }
+    .pkg-list li::before {
+      content: '·';
       position: absolute;
-      bottom: 2.5rem;
-      left: 3rem;
+      left: 0;
+      color: var(--blue-pale);
+    }
+    .packages-footer {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid var(--blue);
+      color: var(--blue-pale);
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.75rem 1.5rem;
+      border-radius: 3px;
+      transition: all 0.15s;
+      background: none;
+      cursor: pointer;
+    }
+    .btn-outline:hover {
+      background: var(--blue);
+      color: var(--white);
+    }
+    .ghost-link {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.3);
+      transition: color 0.15s;
+    }
+    .ghost-link:hover { color: rgba(255,255,255,0.6); }
+
+    /* ─── CONTACT ─────────────────────────────────────────────── */
+    #contact {
+      background: var(--paper2);
+      padding: 6rem 0;
+      border-top: 1px solid var(--border-light);
+    }
+    .contact-inner {
+      max-width: 640px;
+    }
+    .contact-title {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      line-height: 1.12;
+      color: var(--ink);
+      margin-bottom: 1rem;
+    }
+    .contact-sub {
+      font-size: 0.95rem;
+      color: var(--muted);
+      font-weight: 300;
+      line-height: 1.65;
+      margin-bottom: 2.5rem;
+      max-width: 480px;
+    }
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .form-field label {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .form-field input,
+    .form-field textarea {
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      color: var(--ink);
+      background: var(--white);
+      border: 1px solid var(--border-light);
+      border-radius: 2px;
+      padding: 0.7rem 0.9rem;
+      outline: none;
+      transition: border-color 0.15s;
+      width: 100%;
+      resize: none;
+    }
+    .form-field input:focus,
+    .form-field textarea:focus { border-color: var(--blue); }
+    .form-field textarea { min-height: 90px; }
+    .btn-submit {
+      align-self: flex-start;
+      background: var(--ink);
+      color: var(--white);
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      font-weight: 500;
+      padding: 0.8rem 1.6rem;
+      border-radius: 3px;
+      transition: background 0.15s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-submit:hover:not(:disabled) { background: #1f2937; }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* ─── FOOTER ──────────────────────────────────────────────── */
+    footer {
+      background: var(--ink);
+      padding: 2rem 2.5rem;
       display: flex;
       align-items: center;
-      gap: 0.8rem;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .footer-brand {
+      font-family: var(--serif);
+      font-size: 0.95rem;
+      color: var(--white);
+    }
+    .footer-meta {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       INTERNAL VIEW
+    ════════════════════════════════════════════════════════════ */
+    .internal-view {
+      background: var(--internal-bg);
+    }
+    .int-section {
+      padding: 5.5rem 0;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .int-section:first-child { border-top: none; }
+    .int-title {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+      color: var(--white);
+      margin-bottom: 0.75rem;
+      font-weight: 400;
+    }
+    .int-lead {
+      font-size: 0.92rem;
+      color: var(--muted-lt);
+      font-weight: 300;
+      max-width: 540px;
+      line-height: 1.65;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Persona */
+    .persona-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-left: 3px solid var(--internal-accent);
+      padding: 2.2rem 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem 3rem;
+    }
+    .persona-field-label {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--internal-accent);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .persona-field-value {
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.65);
+      font-weight: 300;
+      line-height: 1.6;
+    }
+    .persona-field-value strong {
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    /* Tone guide */
+    .tone-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.05);
+      margin-bottom: 2.5rem;
+    }
+    .tone-card {
+      background: rgba(255,255,255,0.02);
+      padding: 1.8rem 1.6rem;
+    }
+    .tone-card-title {
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--internal-accent);
+      margin-bottom: 0.75rem;
+    }
+    .tone-example {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.6;
+      font-weight: 300;
+    }
+    .tone-example em {
+      display: block;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 0.35rem;
+      font-style: normal;
+    }
+    .tone-example s {
+      color: rgba(255,255,255,0.28);
+      font-style: italic;
+      text-decoration: line-through;
+    }
+    .word-lists {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    .word-list-title {
       font-family: var(--mono);
       font-size: 0.6rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+    .word-list-title.avoid { color: #f87171; }
+    .word-list-title.use   { color: var(--internal-accent); }
+    .word-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .word-tag {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 2px;
+    }
+    .word-tag.avoid {
+      background: rgba(248,113,113,0.1);
+      color: #f87171;
+      border: 1px solid rgba(248,113,113,0.2);
+    }
+    .word-tag.use {
+      background: rgba(56,189,248,0.08);
+      color: var(--internal-accent);
+      border: 1px solid rgba(56,189,248,0.2);
     }
 
-    .hero-scroll-line {
-      width: 36px;
-      height: 1px;
-      background: var(--muted);
-      animation: scrollLine 2s ease-in-out infinite;
+    /* Int packages */
+    .int-pkg-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.05);
     }
-
-    @keyframes scrollLine {
-
-      0%,
-      100% {
-        transform: scaleX(1);
-        opacity: 0.5;
-      }
-
-      50% {
-        transform: scaleX(1.5);
-        opacity: 1;
-      }
+    .int-pkg {
+      background: var(--internal-bg);
+      padding: 1.8rem 2rem;
+      display: grid;
+      grid-template-columns: 200px 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+      transition: background 0.15s;
     }
-
-    /* ── GOLD LEFT BAR ACCENT ─────────────────────── */
-    .left-bar {
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 5px;
-      background: var(--gold);
+    .int-pkg:hover { background: rgba(255,255,255,0.02); }
+    .int-pkg-name {
+      font-family: var(--serif);
+      font-size: 1rem;
+      color: var(--white);
+      font-weight: 400;
+      margin-bottom: 0.3rem;
     }
-
-    /* ── SECTION: SERVICE STACK ───────────────────── */
-    #services {
-      background: var(--cream);
-      color: var(--navy);
-      position: relative;
-    }
-
-    #services .left-bar {
-      background: var(--navy);
-    }
-
-    .services-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    .services-inner h2 {
-      font-size: clamp(2.2rem, 4vw, 3.8rem);
-      color: var(--navy);
-      margin-bottom: 0.6rem;
-    }
-
-    .services-inner .sub {
-      font-size: 1.05rem;
+    .int-pkg-trigger {
+      font-size: 0.78rem;
+      color: var(--muted-lt);
+      font-weight: 300;
       font-style: italic;
-      color: var(--gold2);
-      margin-bottom: 3rem;
+    }
+    .int-pkg-col-label {
+      font-family: var(--mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--internal-accent);
+      margin-bottom: 0.4rem;
+      display: block;
+    }
+    .int-pkg-col-text {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.6);
+      font-weight: 300;
+      line-height: 1.55;
+    }
+    .int-pkg-col-text strong {
+      color: rgba(255,255,255,0.8);
+      font-weight: 500;
+    }
+    .int-pkg-price {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--internal-accent);
+      background: rgba(56,189,248,0.08);
+      border: 1px solid rgba(56,189,248,0.2);
+      padding: 0.2rem 0.55rem;
+      border-radius: 2px;
+      margin-top: 0.5rem;
     }
 
-    .service-grid {
+    /* Sales process */
+    .sales-steps {
+      position: relative;
+      padding-left: 2.5rem;
+    }
+    .sales-steps::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: rgba(56,189,248,0.2);
+    }
+    .sales-step {
+      position: relative;
+      padding-bottom: 2.5rem;
+    }
+    .sales-step:last-child { padding-bottom: 0; }
+    .sales-step::before {
+      content: '';
+      position: absolute;
+      left: -2.5rem;
+      top: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--internal-accent);
+    }
+    .sales-step-num {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--internal-accent);
+      margin-bottom: 0.35rem;
+      display: block;
+    }
+    .sales-step-title {
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 0.4rem;
+    }
+    .sales-step-desc {
+      font-size: 0.85rem;
+      color: var(--muted-lt);
+      font-weight: 300;
+      line-height: 1.6;
+      max-width: 560px;
+    }
+
+    /* ─── MODAL ───────────────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 400;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      backdrop-filter: blur(4px);
+    }
+    .modal-overlay[hidden] { display: none; }
+    .modal-card {
+      background: var(--white);
+      border-radius: 4px;
+      padding: 2.5rem;
+      max-width: 540px;
+      width: 100%;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-close {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      font-size: 1.1rem;
+      color: var(--muted);
+      padding: 0.25rem 0.5rem;
+      transition: color 0.15s;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .modal-close:hover { color: var(--ink); }
+    .modal-title {
+      font-family: var(--serif);
+      font-size: 1.6rem;
+      color: var(--ink);
+      margin-bottom: 0.4rem;
+      font-weight: 400;
+    }
+    .modal-sub {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 300;
+      margin-bottom: 1.8rem;
+      line-height: 1.6;
+    }
+    .modal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .modal-inputs-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 1px;
-      background: rgba(0, 0, 0, 0.1);
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      margin-bottom: 3.5rem;
+      gap: 0.8rem;
     }
-
-    .service-cell {
-      background: var(--cream);
-      padding: 1.8rem 2rem;
-      position: relative;
-      transition: background 0.25s;
+    .modal-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
     }
-
-    .service-cell:hover {
-      background: var(--white);
-    }
-
-    .service-cell .num {
+    .modal-field label {
       font-family: var(--mono);
-      font-size: 0.6rem;
-      color: var(--gold);
-      letter-spacing: 0.2em;
-      margin-bottom: 0.6rem;
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
     }
-
-    .service-cell h3 {
-      font-family: var(--serif);
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 0.5rem;
+    .modal-field input {
+      font-family: var(--sans);
+      font-size: 0.88rem;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--border-light);
+      border-radius: 2px;
+      padding: 0.6rem 0.8rem;
+      outline: none;
+      transition: border-color 0.15s;
     }
-
-    .service-cell p {
+    .modal-field input:focus { border-color: var(--blue); }
+    .modal-email-section {
+      border-top: 1px solid var(--border-light);
+      padding-top: 1rem;
+      margin-top: 0.25rem;
+    }
+    .modal-email-label {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink);
+      font-weight: 500;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+    .modal-email-input {
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      color: var(--ink);
+      background: var(--white);
+      border: 1px solid #d1d5db;
+      border-radius: 2px;
+      padding: 0.7rem 0.9rem;
+      outline: none;
+      width: 100%;
+      transition: border-color 0.15s;
+    }
+    .modal-email-input:focus { border-color: var(--blue); }
+    .modal-submit {
+      background: var(--blue);
+      color: var(--white);
+      font-family: var(--sans);
       font-size: 0.9rem;
-      color: var(--charcoal);
+      font-weight: 500;
+      padding: 0.85rem 1.5rem;
+      border-radius: 3px;
+      width: 100%;
+      transition: background 0.15s;
+      cursor: pointer;
+      border: none;
+    }
+    .modal-submit:hover:not(:disabled) { background: var(--blue-hover); }
+    .modal-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+    .modal-success {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+    .modal-success-check {
+      font-size: 2rem;
+      color: var(--blue);
+      margin-bottom: 1rem;
+    }
+    .modal-success-title {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      color: var(--ink);
+      margin-bottom: 0.75rem;
+    }
+    .modal-success-text {
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-weight: 300;
       line-height: 1.65;
     }
 
-    .service-cell::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 3px;
-      background: var(--gold);
-      transform: scaleY(0);
-      transition: transform 0.3s ease;
-      transform-origin: bottom;
-    }
-
-    .service-cell:hover::before {
-      transform: scaleY(1);
-    }
-
-    .who-label {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gold2);
-      margin-bottom: 1.2rem;
-    }
-
-    .who-cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.2rem;
-    }
-
-    .who-card {
-      background: var(--white);
-      border-top: 3px solid var(--gold);
-      padding: 1.5rem;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-    }
-
-    .who-card h4 {
-      font-family: var(--serif);
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 0.5rem;
-    }
-
-    .who-card p {
-      font-size: 0.85rem;
-      color: var(--charcoal);
-      line-height: 1.6;
-    }
-
-    /* ── SECTION: PACKAGES ────────────────────────── */
-    #packages {
-      background: var(--navy);
-      position: relative;
-    }
-
-    .packages-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    .packages-inner h2 {
-      font-size: clamp(2.2rem, 4vw, 3.8rem);
-      color: var(--white);
-      margin-bottom: 0.6rem;
-    }
-
-    .packages-inner .sub {
-      font-size: 1.05rem;
-      font-style: italic;
-      color: var(--muted);
-      margin-bottom: 3rem;
-    }
-
-    .pkg-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .pkg-table thead tr {
-      background: var(--gold);
-    }
-
-    .pkg-table thead th {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--navy);
-      text-align: left;
-      padding: 1rem 1.4rem;
-      font-weight: 500;
-    }
-
-    .pkg-table tbody tr {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      transition: background 0.2s;
-    }
-
-    .pkg-table tbody tr:nth-child(odd) {
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .pkg-table tbody tr:nth-child(even) {
-      background: rgba(255, 255, 255, 0.01);
-    }
-
-    .pkg-table tbody tr:hover {
-      background: rgba(196, 151, 58, 0.08);
-    }
-
-    .pkg-table td {
-      padding: 1.6rem 1.4rem;
-      vertical-align: top;
-      position: relative;
-    }
-
-    .pkg-table td:first-child {
-      border-left: 3px solid var(--gold);
-    }
-
-    .pkg-name {
-      font-family: var(--serif);
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--white);
-      margin-bottom: 0.25rem;
-      line-height: 1.3;
-    }
-
-    .pkg-q {
-      font-size: 0.95rem;
-      font-style: italic;
-      color: var(--cream);
-      line-height: 1.55;
-    }
-
-    .pkg-outcome {
-      font-size: 0.95rem;
-      color: var(--gold-lt);
-      line-height: 1.55;
-    }
-
-    /* ── SECTION: GO-TO-MARKET ────────────────────── */
-    #gtm {
-      background: var(--cream2);
-      color: var(--navy);
-      position: relative;
-    }
-
-    #gtm .left-bar {
-      background: var(--navy);
-    }
-
-    .gtm-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      width: 100%;
-    }
-
-    .gtm-inner h2 {
-      font-size: clamp(2.2rem, 4vw, 3.8rem);
-      color: var(--navy);
-      margin-bottom: 0.6rem;
-    }
-
-    .gtm-inner .sub {
-      font-size: 1.05rem;
-      font-style: italic;
-      color: var(--gold2);
-      margin-bottom: 3rem;
-    }
-
-    .funnel-cols {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0;
-      position: relative;
-    }
-
-    .funnel-col {
-      position: relative;
-      padding: 2rem 1.6rem;
-      background: var(--navy);
-      color: var(--cream);
-    }
-
-    .funnel-col:nth-child(2) {
-      background: #1C4A6E;
-    }
-
-    .funnel-col:nth-child(3) {
-      background: var(--charcoal);
-    }
-
-    .funnel-col:nth-child(4) {
-      background: var(--gold2);
-    }
-
-    .funnel-col::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: var(--gold);
-    }
-
-    .funnel-col:nth-child(4)::before {
-      background: var(--navy);
-    }
-
-    .funnel-arrow {
-      position: absolute;
-      right: -14px;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 2;
-      width: 0;
-      height: 0;
-      border-top: 14px solid transparent;
-      border-bottom: 14px solid transparent;
-      border-left: 14px solid var(--navy);
-    }
-
-    .funnel-col:nth-child(2) .funnel-arrow {
-      border-left-color: #1C4A6E;
-    }
-
-    .funnel-col:nth-child(3) .funnel-arrow {
-      border-left-color: var(--charcoal);
-    }
-
-    .funnel-col-label {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1rem;
-      line-height: 1.4;
-    }
-
-    .funnel-col:nth-child(4) .funnel-col-label {
-      color: var(--navy);
-    }
-
-    .funnel-rule {
-      width: 100%;
-      height: 1px;
-      background: rgba(196, 151, 58, 0.3);
-      margin-bottom: 1.2rem;
-    }
-
-    .funnel-col:nth-child(4) .funnel-rule {
-      background: rgba(12, 24, 41, 0.2);
-    }
-
-    .funnel-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-    }
-
-    .funnel-list li {
-      font-size: 0.9rem;
-      line-height: 1.5;
-      color: rgba(245, 240, 232, 0.88);
-      padding-left: 1rem;
-      position: relative;
-    }
-
-    .funnel-col:nth-child(4) .funnel-list li {
-      color: var(--navy3);
-    }
-
-    .funnel-list li::before {
-      content: '—';
-      position: absolute;
-      left: 0;
-      color: var(--gold);
-      font-size: 0.7rem;
-    }
-
-    .funnel-col:nth-child(4) .funnel-list li::before {
-      color: var(--navy);
-    }
-
-    /* ── SECTION: BRAND & CLOSE ──────────────────── */
-    #brand {
-      background: var(--navy3);
-      position: relative;
-      min-height: auto;
-      padding-top: 8rem;
-      padding-bottom: 8rem;
-    }
-
-    .brand-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      width: 100%;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6rem;
-      align-items: center;
-    }
-
-    .brand-left h2 {
-      font-size: clamp(2rem, 3.5vw, 3.2rem);
-      color: var(--white);
-      margin-bottom: 0.6rem;
-    }
-
-    .brand-left .sub {
-      font-size: 1rem;
-      font-style: italic;
-      color: var(--muted);
-      margin-bottom: 2.5rem;
-    }
-
-    .brand-pillars {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1px;
-      background: rgba(196, 151, 58, 0.12);
-    }
-
-    .brand-pillar {
-      background: var(--navy2);
-      padding: 1.5rem;
-      position: relative;
-      transition: background 0.2s;
-    }
-
-    .brand-pillar:hover {
-      background: #1e3560;
-    }
-
-    .brand-pillar::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 3px;
-      background: var(--gold);
-    }
-
-    .brand-pillar h4 {
-      font-family: var(--serif);
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--white);
-      margin-bottom: 0.5rem;
-    }
-
-    .brand-pillar p {
-      font-size: 0.83rem;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .brand-right {
-      background: var(--gold);
-      padding: 3.5rem;
-      position: relative;
-    }
-
-    .brand-right::before {
-      content: '"';
-      position: absolute;
-      top: -0.5rem;
-      left: 2rem;
-      font-family: var(--serif);
-      font-size: 8rem;
-      line-height: 1;
-      color: rgba(12, 24, 41, 0.15);
-      pointer-events: none;
-    }
-
-    .brand-quote {
-      font-family: var(--serif);
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--navy);
-      line-height: 1.2;
-      margin-bottom: 1.5rem;
-    }
-
-    .brand-quote em {
-      font-style: italic;
-      font-weight: 400;
-    }
-
-    .brand-cta-sub {
-      font-size: 0.95rem;
-      color: var(--navy2);
-      font-style: italic;
-      margin-bottom: 2rem;
-      line-height: 1.55;
-    }
-
-    .cta-line {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--navy);
-      font-weight: 500;
-    }
-
-    .cta-line::before {
-      content: '';
-      display: block;
-      width: 30px;
-      height: 2px;
-      background: var(--navy);
-    }
-
-    /* ── FOOTER ──────────────────────────────────── */
-    footer {
-      background: var(--navy3);
-      border-top: 1px solid rgba(196, 151, 58, 0.18);
-      padding: 2rem 3rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .footer-brand {
-      font-family: var(--serif);
-      font-size: 0.85rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--white);
-    }
-
-    .footer-brand span {
-      color: var(--gold);
-    }
-
-    .footer-note {
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      text-transform: uppercase;
-    }
-
-    /* ── RESPONSIVE ──────────────────────────────── */
+    /* ─── RESPONSIVE ──────────────────────────────────────────── */
     @media (max-width: 900px) {
-      nav {
-        padding: 0 1.5rem;
-      }
-
-      .nav-links {
-        display: none;
-      }
-
-      section {
-        padding: 5rem 1.5rem 4rem;
-      }
-
-      .service-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .who-cards {
-        grid-template-columns: 1fr;
-      }
-
-      .funnel-cols {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .funnel-arrow {
-        display: none;
-      }
-
-      .brand-inner {
-        grid-template-columns: 1fr;
-        gap: 3rem;
-      }
-
-      .pkg-table thead {
-        display: none;
-      }
-
-      .pkg-table,
-      .pkg-table tbody,
-      .pkg-table tr,
-      .pkg-table td {
-        display: block;
-      }
-
-      .pkg-table tr {
-        margin-bottom: 1.5rem;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-      }
-
-      .pkg-table td {
-        border-left: none;
-      }
-
-      .pkg-table td:first-child {
-        border-left: 3px solid var(--gold);
-      }
-
-      footer {
-        flex-direction: column;
-        gap: 0.8rem;
-        text-align: center;
-      }
+      .pillars-grid,
+      .packages-grid,
+      .exit-tracks,
+      .tone-grid,
+      .word-lists,
+      .persona-card { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .int-pkg { grid-template-columns: 1fr; }
+      .modal-inputs-grid { grid-template-columns: 1fr; }
+      nav { padding: 0 1.5rem; }
+      .container { padding: 0 1.5rem; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
     }
-
     @media (max-width: 600px) {
-      .funnel-cols {
-        grid-template-columns: 1fr;
-      }
-
-      .brand-pillars {
-        grid-template-columns: 1fr;
-      }
+      .view-bar-label { display: none; }
+      .internal-warning { display: none; }
+      .hero-title { font-size: 2.2rem; }
+      #hero, #services, #packages, #contact, .int-section { padding-top: 3.5rem; padding-bottom: 3.5rem; }
+      .packages-grid { grid-template-columns: 1fr; }
+      .modal-card { padding: 1.5rem; }
     }
   </style>
 </head>
-
 <body>
 
-  <!-- ── NAV ───────────────────────────────────────── -->
-  <nav>
-    <a class="nav-brand" href="#hero">Morety <span>&</span> Nys</a>
-    <ul class="nav-links">
+  <!-- ═══ VIEW BAR ═══════════════════════════════════════════════ -->
+  <div class="view-bar" role="banner" aria-label="View selector">
+    <span class="view-bar-label">View:</span>
+    <div class="view-toggle" role="group" aria-label="Switch view">
+      <button class="view-toggle-btn active" data-view="client" aria-pressed="true">Client View</button>
+      <button class="view-toggle-btn" data-view="internal" aria-pressed="false">Internal View</button>
+    </div>
+    <span class="internal-warning" aria-hidden="true">— Not for clients —</span>
+  </div>
+
+  <!-- ═══ NAV ════════════════════════════════════════════════════ -->
+  <nav aria-label="Main navigation">
+    <a class="nav-brand" href="#hero">Morety &amp; Nys</a>
+    <ul class="nav-links" id="navClient">
       <li><a href="#services">Services</a></li>
       <li><a href="#packages">Packages</a></li>
-      <li><a href="#gtm">Go-to-Market</a></li>
-      <li><a href="#brand">Brand</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <ul class="nav-links" id="navInternal" hidden>
+      <li><a href="#int-persona">Persona</a></li>
+      <li><a href="#int-tone">Tone</a></li>
+      <li><a href="#int-packages">Packages</a></li>
+      <li><a href="#int-sales">Process</a></li>
     </ul>
   </nav>
 
-  <!-- ── HERO ──────────────────────────────────────── -->
-  <section id="hero">
-    <div class="left-bar"></div>
-    <div class="hero-bg-grid"></div>
-    <div class="hero-bg-mark"></div>
+  <!-- ═══════════════════════════════════════════════════════════
+       CLIENT VIEW
+  ═══════════════════════════════════════════════════════════════ -->
+  <div id="clientView">
 
-    <div class="hero-eyebrow reveal">Old-Economy Finance Partner</div>
-
-    <h1 class="hero-title reveal reveal-delay-1">
-      Morety<br /><em>&amp; Nys</em>
-    </h1>
-
-    <div class="hero-rule reveal reveal-delay-2"></div>
-
-    <p class="hero-sub reveal reveal-delay-3">
-      Real finance for bootstrapped SMBs, factories, and suppliers.<br />
-      No startup theatre. No buzzwords. Just control.
-    </p>
-
-    <div class="hero-pills reveal reveal-delay-4">
-      <span class="hero-pill">Business Restructuring</span>
-      <span class="hero-pill">M&amp;A</span>
-      <span class="hero-pill">Business Valuation</span>
-      <span class="hero-pill">Fractional CFO</span>
-      <span class="hero-pill">LBO &amp; Deal Work</span>
-    </div>
-
-    <div class="hero-scroll">
-      <span class="hero-scroll-line"></span>
-      Scroll to explore
-    </div>
-  </section>
-
-  <!-- ── SERVICES ───────────────────────────────────── -->
-  <section id="services">
-    <div class="left-bar"></div>
-    <div class="services-inner">
-      <div class="section-tag reveal">01 — Service Stack</div>
-      <h2 class="reveal reveal-delay-1">What We Do</h2>
-      <p class="sub reveal reveal-delay-2">
-        All aimed at boring, bootstrapped SMBs, factories, suppliers.
-      </p>
-
-      <div class="service-grid">
-        <div class="service-cell reveal reveal-delay-1">
-          <div class="num">01</div>
-          <h3>Business Restructuring</h3>
-          <p>When the structure no longer fits the reality. We rebuild from the numbers up — operational, financial, and
-            organisational.</p>
-        </div>
-        <div class="service-cell reveal reveal-delay-2">
-          <div class="num">02</div>
-          <h3>M&amp;A Advisory</h3>
-          <p>Buy-side or sell-side. We handle the financial due diligence, deal structuring, and negotiation support
-            that actually moves transactions.</p>
-        </div>
-        <div class="service-cell reveal reveal-delay-3">
-          <div class="num">03</div>
-          <h3>Business Valuation</h3>
-          <p>For exits, succession, disputes, or just knowing where you stand. Credible, defensible, owner-readable
-            valuations.</p>
-        </div>
-        <div class="service-cell reveal reveal-delay-4">
-          <div class="num">04</div>
-          <h3>Fractional CFO</h3>
-          <p>Ongoing financial leadership without the full-time cost. Budgets, variances, cash flow, KPIs — kept sharp,
-            every month.</p>
-        </div>
-        <div class="service-cell reveal reveal-delay-5">
-          <div class="num">05</div>
-          <h3>Financial Projection &amp; Planning</h3>
-          <p>Bank-ready, investor-ready numbers with a story behind them. Growth plans, capex decisions, and hire
-            modelling done properly.</p>
-        </div>
-        <div class="service-cell reveal reveal-delay-6">
-          <div class="num">06</div>
-          <h3>LBO &amp; Software-Deal Style Work</h3>
-          <p>Private equity-grade analysis brought to old-economy deals. Returns modelling, debt structuring, management
-            incentive design.</p>
-        </div>
-      </div>
-
-      <p class="who-label reveal">↓ Who we serve</p>
-      <div class="who-cards">
-        <div class="who-card reveal reveal-delay-1">
-          <h4>Automotive suppliers &amp; factories</h4>
-          <p>Tier 1–3 suppliers, traditional manufacturers under margin pressure or facing ownership transition.</p>
-        </div>
-        <div class="who-card reveal reveal-delay-2">
-          <h4>Old / evolving businesses</h4>
-          <p>Long-established firms with succession gaps, legacy structures, or businesses navigating a step-change in
-            complexity.</p>
-        </div>
-        <div class="who-card reveal reveal-delay-3">
-          <h4>"Boring" SMBs needing real finance</h4>
-          <p>Not slides. Not pitch decks. Owners who want actual numbers, real analysis, and a controller who speaks
-            plainly.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── PACKAGES ───────────────────────────────────── -->
-  <section id="packages">
-    <div class="left-bar"></div>
-    <div class="packages-inner">
-      <div class="section-tag reveal">02 — Packages &amp; Outcomes</div>
-      <h2 class="reveal reveal-delay-1">Packages → Outcomes</h2>
-      <p class="sub reveal reveal-delay-2">
-        Four entry points. All designed around the owner's real question.
-      </p>
-
-      <table class="pkg-table reveal reveal-delay-3">
-        <thead>
-          <tr>
-            <th>Package</th>
-            <th>Owner Question</th>
-            <th>Outcome</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <div class="pkg-name">Financial Health Assessment</div>
-            </td>
-            <td>
-              <div class="pkg-q">"Where / how am I going?"</div>
-            </td>
-            <td>
-              <div class="pkg-outcome">Clarity, simple score/report + concrete to-dos</div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="pkg-name">Financial Projection &amp; Planning</div>
-            </td>
-            <td>
-              <div class="pkg-q">"Can I afford this plan?" (growth / capex / hires)</div>
-            </td>
-            <td>
-              <div class="pkg-outcome">Bank- and investor-ready numbers &amp; story</div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="pkg-name">Succession / Exit Readiness</div>
-            </td>
-            <td>
-              <div class="pkg-q">"How do I get out well?" (sell / hand over)</div>
-            </td>
-            <td>
-              <div class="pkg-outcome">Deal structure, valuation, and clean data room</div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="pkg-name">Fractional CFO (ongoing support)</div>
-            </td>
-            <td>
-              <div class="pkg-q">"Who keeps an eye on this?"</div>
-            </td>
-            <td>
-              <div class="pkg-outcome">Ongoing control: budgets, variances, cash, KPIs</div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- ── GO-TO-MARKET ───────────────────────────────── -->
-  <section id="gtm">
-    <div class="left-bar"></div>
-    <div class="gtm-inner">
-      <div class="section-tag reveal">03 — Go-to-Market Funnel</div>
-      <h2 class="reveal reveal-delay-1">How We Find &amp; Win Owners</h2>
-      <p class="sub reveal reveal-delay-2">
-        From first contact to 45-minute review call.
-      </p>
-
-      <div class="funnel-cols">
-        <div class="funnel-col reveal reveal-delay-1">
-          <div class="funnel-col-label">Top of Funnel</div>
-          <div class="funnel-rule"></div>
-          <ul class="funnel-list">
-            <li>Website</li>
-            <li>Email outreach</li>
-            <li>LinkedIn</li>
-            <li>Phone calls</li>
-            <li>In-person visits</li>
-            <li>Business cards / simple one-pager</li>
-          </ul>
-          <div class="funnel-arrow"></div>
-        </div>
-
-        <div class="funnel-col reveal reveal-delay-2">
-          <div class="funnel-col-label">Nurture Layer</div>
-          <div class="funnel-rule"></div>
-          <ul class="funnel-list">
-            <li>Newsletter = "overcommunicate"</li>
-            <li>Short, practical emails: problems, mini-cases, checklists for owners</li>
-            <li>Always point back to the free Financial Health Score</li>
-          </ul>
-          <div class="funnel-arrow"></div>
-        </div>
-
-        <div class="funnel-col reveal reveal-delay-3">
-          <div class="funnel-col-label">Partners &amp; Referrers</div>
-          <div class="funnel-rule"></div>
-          <ul class="funnel-list">
-            <li>Local banks (corporate / SME officers)</li>
-            <li>Lawyers, accountants, small M&amp;A boutiques, industry associations</li>
-            <li>Give them the score/report as a tool for their clients</li>
-          </ul>
-          <div class="funnel-arrow"></div>
-        </div>
-
-        <div class="funnel-col reveal reveal-delay-4">
-          <div class="funnel-col-label">Core Conversion Asset</div>
-          <div class="funnel-rule"></div>
-          <ul class="funnel-list">
-            <li>Owner fills 8–12 key numbers</li>
-            <li>You send back: 1-page score + 2–3 recommended next actions</li>
-            <li>CTA: "Let's review this together in 45 minutes"</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── BRAND & CLOSE ──────────────────────────────── -->
-  <section id="brand">
-    <div class="brand-inner">
-      <div class="brand-left">
-        <div class="section-tag reveal">04 — Brand &amp; Tone</div>
-        <h2 class="reveal reveal-delay-1">How We Show Up</h2>
-        <p class="sub reveal reveal-delay-2">The feel of a trusted controller. The sharpness of a deal sherpa.</p>
-
-        <div class="brand-pillars">
-          <div class="brand-pillar reveal reveal-delay-1">
-            <h4>Professional but casual</h4>
-            <p>No stiff suits, no startup hoodies. We talk like someone who's seen it all and doesn't need to perform.
-            </p>
-          </div>
-          <div class="brand-pillar reveal reveal-delay-2">
-            <h4>Practical &amp; tangible</h4>
-            <p>Every output is actionable. Not a theory. Numbers and next steps.</p>
-          </div>
-          <div class="brand-pillar reveal reveal-delay-3">
-            <h4>No buzzwords</h4>
-            <p>Zero startup theatre. We say "this is costing you €40k/year" — not "leverage synergies".</p>
-          </div>
-          <div class="brand-pillar reveal reveal-delay-4">
-            <h4>Trusted deal sherpa</h4>
-            <p>We guide owners through unfamiliar terrain — exits, restructurings, growth — without drama.</p>
+    <!-- HERO -->
+    <section id="hero">
+      <div class="container">
+        <div class="hero-inner">
+          <span class="hero-eyebrow reveal">Financial Advisory for Business Owners</span>
+          <h1 class="hero-title reveal reveal-d1">We run the numbers.<br>You run the business.</h1>
+          <div class="hero-rule reveal reveal-d2"></div>
+          <p class="hero-sub reveal reveal-d2">
+            Your margins are under pressure. The bank wants answers. The world keeps moving faster.
+            You need a clear picture of where your business actually stands — not another consultant with a framework.
+          </p>
+          <div class="hero-cta-group reveal reveal-d3">
+            <button class="btn-primary" id="openModalHero" aria-haspopup="dialog">
+              → Get Your Financial Health Score
+            </button>
+            <span class="hero-microcopy">Fill in 8 numbers. Get a 1-page report in your inbox. No call required.</span>
+            <a class="hero-ghost-link" href="#contact">Or talk directly →</a>
           </div>
         </div>
       </div>
+    </section>
 
-      <div class="brand-right reveal reveal-delay-2">
-        <p class="brand-quote">
-          The business you build<br />
-          deserves <em>real</em> finance.
-        </p>
-        <p class="brand-cta-sub">
-          Not more slides. Not another consultant with a framework.<br />
-          A controller who gives a damn about your numbers.
-        </p>
-        <div class="cta-line">morety-nys.com</div>
+    <!-- SERVICES -->
+    <section id="services">
+      <div class="container">
+        <div class="services-header reveal">
+          <span class="section-tag">01 — What we do</span>
+          <h2 class="services-title">Two things.<br>Done properly.</h2>
+          <p class="services-sub">We don't do everything. We focus where the leverage actually is for owners like you.</p>
+        </div>
+
+        <div class="pillars-grid">
+          <div class="pillar-card reveal reveal-d1">
+            <span class="pillar-label">Pillar 01</span>
+            <h3 class="pillar-title">Financial Performance</h3>
+            <p class="pillar-desc">You need to know where the leaks are before they become crises. We give you the picture — and then we fix it.</p>
+            <ul class="pillar-list">
+              <li>Financial Health Assessment — your snapshot, scored and ranked</li>
+              <li>Fractional CFO — monthly financial leadership without the headcount</li>
+              <li>Financial Projection &amp; Planning — numbers that survive a bank meeting</li>
+              <li>Business Restructuring — when the structure no longer fits the reality</li>
+            </ul>
+          </div>
+
+          <div class="pillar-card reveal reveal-d2">
+            <span class="pillar-label">Pillar 02</span>
+            <h3 class="pillar-title">Profit &amp; Exit</h3>
+            <p class="pillar-desc">Either keep more money in the business, or get out well. Sometimes both. Both are worth planning for now.</p>
+            <div class="exit-tracks">
+              <div class="exit-track">
+                <div class="exit-track-title">Profit Optimization</div>
+                <p class="exit-track-desc">Stop leaving money on the table. Margin analysis, cost structure, pricing — straight to where it hurts.</p>
+              </div>
+              <div class="exit-track">
+                <div class="exit-track-title">Succession &amp; Exit</div>
+                <p class="exit-track-desc">Ready to sell or hand over? Valuation, deal structure, data room. We've done this before so you don't have to figure it out under pressure.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="who-chips reveal">
+          <span class="who-chip">Automotive suppliers &amp; Tier 1–3 manufacturers</span>
+          <span class="who-chip">Long-established SMBs in transition</span>
+          <span class="who-chip">Owners navigating succession or rapid change</span>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ── FOOTER ─────────────────────────────────────── -->
+    <!-- PACKAGES -->
+    <section id="packages">
+      <div class="container">
+        <div class="packages-header reveal">
+          <span class="section-tag on-dark">02 — Packages</span>
+          <h2 class="packages-title">Four entry points.<br>One real question each.</h2>
+          <p class="packages-sub">Pick where you are. We'll tell you what makes sense next.</p>
+        </div>
+
+        <div class="packages-grid reveal reveal-d1">
+          <div class="pkg-card">
+            <h3 class="pkg-name">Financial Health Assessment</h3>
+            <p class="pkg-question">"How strong is my business, actually?"</p>
+            <ul class="pkg-list">
+              <li>Scored 1-page picture of where you stand</li>
+              <li>3 concrete things to act on — ranked by impact</li>
+              <li>Delivered within 5 business days</li>
+            </ul>
+          </div>
+          <div class="pkg-card">
+            <h3 class="pkg-name">Financial Projection &amp; Planning</h3>
+            <p class="pkg-question">"Can I afford this move?"</p>
+            <ul class="pkg-list">
+              <li>Bank- and investor-ready numbers</li>
+              <li>A narrative that holds up under scrutiny</li>
+              <li>Growth scenarios modelled clearly</li>
+            </ul>
+          </div>
+          <div class="pkg-card">
+            <h3 class="pkg-name">Succession &amp; Exit Readiness</h3>
+            <p class="pkg-question">"How do I get out well?"</p>
+            <ul class="pkg-list">
+              <li>Credible, defensible business valuation</li>
+              <li>Deal structure and negotiation prep</li>
+              <li>Clean data room — ready when an offer lands</li>
+            </ul>
+          </div>
+          <div class="pkg-card">
+            <h3 class="pkg-name">Fractional CFO</h3>
+            <p class="pkg-question">"Who keeps an eye on this month to month?"</p>
+            <ul class="pkg-list">
+              <li>Budgets, variances, cash, KPIs — every month</li>
+              <li>Financial leadership without the headcount cost</li>
+              <li>One person who knows your numbers as well as you do</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="packages-footer reveal reveal-d2">
+          <button class="btn-outline" id="openModalPkg" aria-haspopup="dialog">
+            Start with the Financial Health Score →
+          </button>
+          <a href="#contact" class="ghost-link">Or book a 45-min call</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="container">
+        <div class="contact-inner">
+          <span class="section-tag reveal">03 — Let's talk</span>
+          <h2 class="contact-title reveal reveal-d1">Not a discovery call.<br>A real conversation.</h2>
+          <p class="contact-sub reveal reveal-d2">
+            45 minutes. We look at your numbers together.
+            If it makes sense to work together, we'll tell you honestly. If not, we'll tell you that too.
+          </p>
+          <form class="contact-form reveal reveal-d3" id="contactForm" novalidate>
+            <div class="form-row">
+              <div class="form-field">
+                <label for="cName">Name</label>
+                <input type="text" id="cName" name="name" placeholder="Your name" autocomplete="name">
+              </div>
+              <div class="form-field">
+                <label for="cCompany">Company</label>
+                <input type="text" id="cCompany" name="company" placeholder="Your company">
+              </div>
+            </div>
+            <div class="form-field">
+              <label for="cEmail">Email</label>
+              <input type="email" id="cEmail" name="email" placeholder="your@email.com" autocomplete="email">
+            </div>
+            <div class="form-field">
+              <label for="cMessage">What's on your mind? <span style="font-weight:300;text-transform:none;letter-spacing:0">(optional)</span></label>
+              <textarea id="cMessage" name="message" placeholder="A question, a situation, or just that you'd like to talk."></textarea>
+            </div>
+            <button type="submit" class="btn-submit" id="contactSubmit">Send →</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /clientView -->
+
+  <!-- ═══════════════════════════════════════════════════════════
+       INTERNAL VIEW
+  ═══════════════════════════════════════════════════════════════ -->
+  <div id="internalView" class="internal-view" hidden>
+
+    <!-- PERSONA -->
+    <section id="int-persona" class="int-section">
+      <div class="container">
+        <span class="section-tag internal">Internal — Client Persona</span>
+        <h2 class="int-title">Who We're Talking To</h2>
+        <p class="int-lead">Before writing anything, sending anything, or saying anything — know this person. Everything we produce is calibrated to them.</p>
+
+        <div class="persona-card">
+          <div class="persona-field">
+            <span class="persona-field-label">Profile</span>
+            <div class="persona-field-value">
+              <strong>The Owner.</strong> 45–65 years old. Runs a business with 15–200 employees. Has been doing this for 10–30 years. Built it themselves or inherited it from family. High on instinct, often low on formal finance — reads P&amp;L but doesn't always trust it.
+            </div>
+          </div>
+          <div class="persona-field">
+            <span class="persona-field-label">Industry</span>
+            <div class="persona-field-value">
+              Manufacturing, automotive supply chain (Tier 1–3), traditional services, logistics, industrial SMBs. Often family-owned. Often in regions with concentrated industrial exposure — automotive corridor, food processing, construction supply.
+            </div>
+          </div>
+          <div class="persona-field">
+            <span class="persona-field-label">Current State of Mind</span>
+            <div class="persona-field-value">
+              Under pressure — but not panicking. Margins are tighter. Costs are up. AI news makes them uneasy. EV disruption, Mercosur, rising energy costs — they see the headlines. They're watching. They want to know: <strong>how strong am I actually?</strong>
+            </div>
+          </div>
+          <div class="persona-field">
+            <span class="persona-field-label">What They Actually Want</span>
+            <div class="persona-field-value">
+              Clarity. To know if the business is solid. To not be surprised. To understand if they can exit in 3–5 years — or if they need to fix something first. And honestly? To talk to someone who actually understands their kind of business.
+            </div>
+          </div>
+          <div class="persona-field">
+            <span class="persona-field-label">What They Don't Want</span>
+            <div class="persona-field-value">
+              Another consultant who doesn't know their industry. Jargon. A slide deck that says "let's align on strategic pillars." Someone who talks about vision while they're dealing with a cash flow gap. <strong>They can smell bullshit immediately.</strong>
+            </div>
+          </div>
+          <div class="persona-field">
+            <span class="persona-field-label">Trigger Moments</span>
+            <div class="persona-field-value">
+              Bank requests updated financials. Key customer is at risk. An offer to buy the business lands unexpectedly. A family member needs to be brought in or bought out. They wake up and realize they don't actually know what the business is worth.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TONE GUIDE -->
+    <section id="int-tone" class="int-section">
+      <div class="container">
+        <span class="section-tag internal">Internal — Tone &amp; Voice</span>
+        <h2 class="int-title">How We Sound</h2>
+        <p class="int-lead">Every word we write or say should pass the test: "Would a stressed owner roll their eyes at this?" If yes — cut it.</p>
+
+        <div class="tone-grid">
+          <div class="tone-card">
+            <div class="tone-card-title">Direct, not blunt for shock value</div>
+            <div class="tone-example">
+              <em>Say: "Your DSO is 68 days. That's eating your cash."</em>
+              <s>Not: "We leverage dynamic receivables optimisation frameworks."</s>
+            </div>
+          </div>
+          <div class="tone-card">
+            <div class="tone-card-title">Colleague, not consultant</div>
+            <div class="tone-example">
+              <em>We're the person they call before they call their lawyer. We pick up the phone.</em>
+              <s>Not the one who sends a 40-page report and disappears.</s>
+            </div>
+          </div>
+          <div class="tone-card">
+            <div class="tone-card-title">Honest about limits</div>
+            <div class="tone-example">
+              <em>If something isn't our area, we say so. That's what earns trust.</em>
+              <s>Don't oversell. Don't pitch services they don't need yet.</s>
+            </div>
+          </div>
+          <div class="tone-card">
+            <div class="tone-card-title">Serious, not solemn</div>
+            <div class="tone-example">
+              <em>Finance is stressful. Dry humour is fine. Existential gravitas is not.</em>
+              <s>We're not saving their soul. We're fixing their numbers.</s>
+            </div>
+          </div>
+        </div>
+
+        <div class="word-lists">
+          <div>
+            <div class="word-list-title avoid">Words we never use</div>
+            <div class="word-tags">
+              <span class="word-tag avoid">synergies</span>
+              <span class="word-tag avoid">pivot</span>
+              <span class="word-tag avoid">leverage (verb)</span>
+              <span class="word-tag avoid">ecosystem</span>
+              <span class="word-tag avoid">journey</span>
+              <span class="word-tag avoid">best-in-class</span>
+              <span class="word-tag avoid">value proposition</span>
+              <span class="word-tag avoid">holistic</span>
+              <span class="word-tag avoid">mission-driven</span>
+              <span class="word-tag avoid">unlock</span>
+              <span class="word-tag avoid">elevate</span>
+              <span class="word-tag avoid">stakeholders</span>
+            </div>
+          </div>
+          <div>
+            <div class="word-list-title use">Words we like</div>
+            <div class="word-tags">
+              <span class="word-tag use">numbers</span>
+              <span class="word-tag use">control</span>
+              <span class="word-tag use">clear</span>
+              <span class="word-tag use">direct</span>
+              <span class="word-tag use">margin</span>
+              <span class="word-tag use">exit</span>
+              <span class="word-tag use">cash</span>
+              <span class="word-tag use">owner</span>
+              <span class="word-tag use">honest</span>
+              <span class="word-tag use">real</span>
+              <span class="word-tag use">fix</span>
+              <span class="word-tag use">picture</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INT PACKAGES -->
+    <section id="int-packages" class="int-section">
+      <div class="container">
+        <span class="section-tag internal">Internal — Packages &amp; Pricing</span>
+        <h2 class="int-title">Offer Packages</h2>
+        <p class="int-lead">What we offer, how to sell it, and where it leads. Pricing is internal only — never shown to clients.</p>
+
+        <div class="int-pkg-list">
+          <div class="int-pkg">
+            <div>
+              <div class="int-pkg-name">Financial Health Assessment</div>
+              <div class="int-pkg-trigger">"How strong am I actually?"</div>
+              <span class="int-pkg-price">€3,500–5,000 fixed</span>
+            </div>
+            <div>
+              <span class="int-pkg-col-label">Sales angle &amp; trigger</span>
+              <div class="int-pkg-col-text">Best entry point. Lead with the free score tool — if they're engaged, propose the full Assessment as "let's do this properly." Works well after the 45-min call.<br><br><strong>Red flags:</strong> Owners who want a report to show their bank, not to act on it. Vanity buyers.</div>
+            </div>
+            <div>
+              <span class="int-pkg-col-label">Upsell path</span>
+              <div class="int-pkg-col-text">Leads to Fractional CFO (ongoing) or Projection &amp; Planning (if they want to act on the findings). Occasionally leads to exit readiness if the picture is strong enough to sell.<br><br><strong>Conversion note:</strong> Easiest entry. Use it to start the relationship.</div>
+            </div>
+          </div>
+
+          <div class="int-pkg">
+            <div>
+              <div class="int-pkg-name">Financial Projection &amp; Planning</div>
+              <div class="int-pkg-trigger">"Can I afford this move?"</div>
+              <span class="int-pkg-price">€4,500–7,000 fixed</span>
+            </div>
+            <div>
+              <span class="int-pkg-col-label">Sales angle &amp; trigger</span>
+              <div class="int-pkg-col-text">Triggered by a specific event: bank meeting, new investment, hiring decision, expansion. Lead with: "We'll give you numbers that hold up in a room." Position as deal-enablement, not accounting.<br><br><strong>Red flags:</strong> Clients who need projections for compliance only — no real decision behind them.</div>
+            </div>
+            <div>
+              <span class="int-pkg-col-label">Upsell path</span>
+              <div class="int-pkg-col-text">Often sold alongside Fractional CFO to track actuals vs. plan. Can lead to exit readiness if projections reveal strong enterprise value.<br><br><strong>Note:</strong> Banks and investors will probe these numbers. Deliver something defensible.</div>
+            </div>
+          </div>
+
+          <div class="int-pkg">
+            <div>
+              <div class="int-pkg-name">Succession &amp; Exit Readiness</div>
+              <div class="int-pkg-trigger">"How do I get out well?"</div>
+              <span class="int-pkg-price">€6,000–12,000 fixed</span>
+            </div>
+            <div>
+              <span class="int-pkg-col-label">Sales angle &amp; trigger</span>
+              <div class="int-pkg-col-text">Triggered by age (55+), family dynamics, unexpected offer, or strategic fatigue. Don't push it — let them arrive at it. Open the door gently: "Have you thought about what the business is worth if you wanted to step back?"<br><br><strong>Red flags:</strong> Not ready emotionally. Still identify too strongly with the business.</div>
+            </div>
+            <div>
+              <span class="int-pkg-col-label">Upsell path</span>
+              <div class="int-pkg-col-text">Often requires Projection &amp; Planning as a precursor. May include M&amp;A advisory during a live deal, billed separately.<br><br><strong>Note:</strong> Highest-value engagement. Takes time. Don't rush the close.</div>
+            </div>
+          </div>
+
+          <div class="int-pkg">
+            <div>
+              <div class="int-pkg-name">Fractional CFO</div>
+              <div class="int-pkg-trigger">"Who keeps an eye on this?"</div>
+              <span class="int-pkg-price">€1,800–3,500/month</span>
+            </div>
+            <div>
+              <span class="int-pkg-col-label">Sales angle &amp; trigger</span>
+              <div class="int-pkg-col-text">Sell it as control, not cost. "For less than one full-time salary, you get someone who knows your numbers as well as you do — every month." Best sold after a Health Assessment or Projection engagement.<br><br><strong>Red flags:</strong> Business too small (&lt;€1M revenue) — not enough complexity to justify the ongoing work.</div>
+            </div>
+            <div>
+              <span class="int-pkg-col-label">Upsell path</span>
+              <div class="int-pkg-col-text">Most valuable long-term relationship. Recurring revenue. Often evolves into exit advisory as trust deepens.<br><br><strong>Note:</strong> Scope clearly. Define deliverables per month. Watch for scope creep.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SALES PROCESS -->
+    <section id="int-sales" class="int-section">
+      <div class="container">
+        <span class="section-tag internal">Internal — Sales Process</span>
+        <h2 class="int-title">How a Deal Gets Done</h2>
+        <p class="int-lead">No tricks. No pressure. No pipeline theatre. This is how we move from an interested owner to a signed client.</p>
+
+        <div class="sales-steps">
+          <div class="sales-step">
+            <span class="sales-step-num">Step 01</span>
+            <div class="sales-step-title">First contact or referral</div>
+            <div class="sales-step-desc">Owner reaches out or is referred by a banker, lawyer, or accountant. First response within 24h — voice note or short personal email, not a template. Goal: establish "we're not like the others" in the first 2 minutes.</div>
+          </div>
+          <div class="sales-step">
+            <span class="sales-step-num">Step 02</span>
+            <div class="sales-step-title">Financial Health Score (the hook)</div>
+            <div class="sales-step-desc">Send the link or do it live together on a call. Lowest-friction entry — no commitment, clear value. Always offer: "Even if we don't work together, this is worth doing." Use the score to frame the 45-min conversation.</div>
+          </div>
+          <div class="sales-step">
+            <span class="sales-step-num">Step 03</span>
+            <div class="sales-step-title">45-minute review call</div>
+            <div class="sales-step-desc">Go through the numbers together — don't just present them back, ask questions. Find the one thing that's actually costing them the most. End with a specific, concrete recommendation — not a vague next step. If it's a fit, say so plainly.</div>
+          </div>
+          <div class="sales-step">
+            <span class="sales-step-num">Step 04</span>
+            <div class="sales-step-title">One-page proposal</div>
+            <div class="sales-step-desc">If there's a fit: send a one-pager within 48 hours. What we'll do, what they'll get, what it costs. No Powerpoint. No 20-page methodology doc. One page, plain language, 48 hours — never a week later.</div>
+          </div>
+          <div class="sales-step">
+            <span class="sales-step-num">Step 05</span>
+            <div class="sales-step-title">Close or close the loop</div>
+            <div class="sales-step-desc">If yes: simple agreement, kick-off call within 1 week. If no: "When would be a better time to revisit?" — set a date. Don't chase. Always ask for a referral after 30 days of a successful engagement. Referrals are our best channel.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /internalView -->
+
+  <!-- ═══ FOOTER ══════════════════════════════════════════════════ -->
   <footer>
-    <div class="footer-brand">Morety <span>&</span> Nys</div>
-    <div class="footer-note">Old-Economy Finance Partner — © 2025</div>
+    <span class="footer-brand">Morety &amp; Nys</span>
+    <span class="footer-meta">Financial Advisory · © 2025</span>
   </footer>
 
-  <!-- ── SCROLL REVEAL ──────────────────────────────── -->
+  <!-- ═══ LEAD MAGNET MODAL ══════════════════════════════════════ -->
+  <div class="modal-overlay" id="healthModal" hidden role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card" id="modalCard">
+      <button class="modal-close" id="modalClose" aria-label="Close modal">✕</button>
+
+      <div id="modalFormContent">
+        <h2 class="modal-title" id="modalTitle">How strong is your business, actually?</h2>
+        <p class="modal-sub">Fill in 8 numbers. Get a 1-page Financial Health Score in your inbox — with 2–3 things worth acting on. No call required unless you want one.</p>
+
+        <form class="modal-form" id="modalForm" novalidate>
+          <div class="modal-inputs-grid">
+            <div class="modal-field">
+              <label for="m1">Annual Revenue (€)</label>
+              <input type="number" id="m1" placeholder="e.g. 4,200,000" min="0">
+            </div>
+            <div class="modal-field">
+              <label for="m2">Gross Profit Margin (%)</label>
+              <input type="number" id="m2" placeholder="e.g. 38" min="0" max="100">
+            </div>
+            <div class="modal-field">
+              <label for="m3">Operating Profit Margin (%)</label>
+              <input type="number" id="m3" placeholder="e.g. 12">
+            </div>
+            <div class="modal-field">
+              <label for="m4">Cash Runway (months)</label>
+              <input type="number" id="m4" placeholder="e.g. 4" min="0">
+            </div>
+            <div class="modal-field">
+              <label for="m5">Debt-to-Equity Ratio</label>
+              <input type="number" id="m5" placeholder="e.g. 1.4" step="0.1" min="0">
+            </div>
+            <div class="modal-field">
+              <label for="m6">Days Sales Outstanding (DSO)</label>
+              <input type="number" id="m6" placeholder="e.g. 52" min="0">
+            </div>
+            <div class="modal-field">
+              <label for="m7">Revenue Growth vs. Last Year (%)</label>
+              <input type="number" id="m7" placeholder="e.g. +8 or -3">
+            </div>
+            <div class="modal-field">
+              <label for="m8">Top 3 customers = % of revenue</label>
+              <input type="number" id="m8" placeholder="e.g. 62" min="0" max="100">
+            </div>
+          </div>
+
+          <div class="modal-email-section">
+            <label class="modal-email-label" for="mEmail">Where should we send your report?</label>
+            <input type="email" id="mEmail" class="modal-email-input" placeholder="your@email.com" autocomplete="email" required>
+          </div>
+
+          <button type="submit" class="modal-submit" id="modalSubmit">Send Me My Score →</button>
+        </form>
+      </div>
+
+      <div id="modalSuccessContent" hidden>
+        <div class="modal-success">
+          <div class="modal-success-check">✓</div>
+          <h2 class="modal-success-title">Your report is on its way.</h2>
+          <p class="modal-success-text">
+            We'll run through your numbers and send you a 1-page Financial Health Score within 24 hours.
+            If we spot anything worth a conversation, we'll say so plainly.
+            Otherwise, it's yours to act on.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SCRIPT ══════════════════════════════════════════════════ -->
   <script>
-    const reveals = document.querySelectorAll('.reveal');
+    // ── 1. VIEW TOGGLE ─────────────────────────────────────────────
+    const clientView      = document.getElementById('clientView');
+    const internalView    = document.getElementById('internalView');
+    const navClient       = document.getElementById('navClient');
+    const navInternal     = document.getElementById('navInternal');
+    const toggleBtns      = document.querySelectorAll('.view-toggle-btn');
+    const warningBadge    = document.querySelector('.internal-warning');
+
+    function setView(view) {
+      const isInternal = view === 'internal';
+
+      clientView.hidden   = isInternal;
+      internalView.hidden = !isInternal;
+      navClient.hidden    = isInternal;
+      navInternal.hidden  = !isInternal;
+
+      toggleBtns.forEach(btn => {
+        const active = btn.dataset.view === view;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-pressed', String(active));
+      });
+
+      warningBadge.style.opacity = isInternal ? '1' : '0';
+      document.body.dataset.view = view;
+      window.scrollTo({ top: 0, behavior: 'instant' });
+
+      if (isInternal) {
+        internalView.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+      }
+    }
+
+    setView('client');
+
+    toggleBtns.forEach(btn => {
+      btn.addEventListener('click', () => setView(btn.dataset.view));
+    });
+
+    // ── 2. SCROLL REVEAL ───────────────────────────────────────────
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    }, { threshold: 0.1, rootMargin: '-30px 0px' });
 
-    reveals.forEach(el => observer.observe(el));
+    document.querySelectorAll('#clientView .reveal').forEach(el => observer.observe(el));
 
-    // Immediately reveal hero elements
-    document.querySelectorAll('#hero .reveal').forEach(el => {
-      setTimeout(() => el.classList.add('visible'), 100);
+    // ── 3. MODAL ───────────────────────────────────────────────────
+    const modal               = document.getElementById('healthModal');
+    const modalClose          = document.getElementById('modalClose');
+    const modalForm           = document.getElementById('modalForm');
+    const modalSubmit         = document.getElementById('modalSubmit');
+    const modalFormContent    = document.getElementById('modalFormContent');
+    const modalSuccessContent = document.getElementById('modalSuccessContent');
+    const mEmail              = document.getElementById('mEmail');
+
+    let lastTrigger = null;
+
+    function openModal(trigger) {
+      lastTrigger = trigger || null;
+      modal.hidden = false;
+      document.body.style.overflow = 'hidden';
+      modalClose.focus();
+      modalFormContent.hidden    = false;
+      modalSuccessContent.hidden = true;
+      modalSubmit.disabled       = false;
+      modalSubmit.textContent    = 'Send Me My Score →';
+      mEmail.style.borderColor   = '';
+    }
+
+    function closeModal() {
+      modal.hidden = true;
+      document.body.style.overflow = '';
+      if (lastTrigger) lastTrigger.focus();
+    }
+
+    document.getElementById('openModalHero').addEventListener('click', function() { openModal(this); });
+    document.getElementById('openModalPkg').addEventListener('click',  function() { openModal(this); });
+
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
+
+    // Focus trap
+    modal.addEventListener('keydown', e => {
+      if (e.key !== 'Tab') return;
+      const focusable = Array.from(modal.querySelectorAll('button:not([disabled]), input, textarea'))
+        .filter(el => !el.closest('[hidden]'));
+      const first = focusable[0];
+      const last  = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+
+    // Simulated submit
+    modalForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const email = mEmail.value.trim();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        mEmail.style.borderColor = '#ef4444';
+        mEmail.focus();
+        setTimeout(() => { mEmail.style.borderColor = ''; }, 1500);
+        return;
+      }
+      modalSubmit.disabled    = true;
+      modalSubmit.textContent = 'Analysing…';
+      setTimeout(() => {
+        modalFormContent.hidden    = true;
+        modalSuccessContent.hidden = false;
+        modalClose.focus();
+      }, 1400);
+    });
+
+    // ── 4. CONTACT FORM (simulated) ────────────────────────────────
+    document.getElementById('contactForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const btn = document.getElementById('contactSubmit');
+      btn.textContent = 'Sent.';
+      btn.disabled    = true;
+      btn.style.background = '#374151';
     });
   </script>
 
 </body>
-
 </html>
