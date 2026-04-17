@@ -1,1643 +1,1346 @@
 <!DOCTYPE html>
-<html lang="en" data-view="client">
+<html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Morety & Nys — Financial Advisory</title>
+  <title>Morety &amp; Nys — Cash Control &amp; Profitability</title>
+  <meta name="description" content="Financial advisory for growing businesses. Cash flow control, working capital optimisation, and profitability analysis — without the overhead of a full finance team.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+
   <style>
-    /* ─── TOKENS ──────────────────────────────────────────────── */
+    /* ─── TOKENS ─────────────────────────────────────────────────────── */
     :root {
-      --ink:              #111827;
-      --ink2:             #1a2535;
-      --paper:            #F8F8F6;
-      --paper2:           #EFEFEC;
-      --white:            #FFFFFF;
-      --blue:             #1D4ED8;
-      --blue-hover:       #1e40af;
-      --blue-pale:        #DBEAFE;
-      --muted:            #6B7280;
-      --muted-lt:         #9CA3AF;
-      --border-dark:      rgba(255,255,255,0.08);
-      --border-light:     rgba(0,0,0,0.09);
-      --internal-bg:      #0F172A;
-      --internal-accent:  #38BDF8;
+      --color-primary:    #0049D1;
+      --color-secondary:  #3B82F6;
+      --color-dark:       #0D1B2A;
+      --color-muted:      #64748B;
+      --color-bg:         #ffffff;
+      --color-white:      #ffffff;
+      --color-surface:    #E8EEFF;   /* deeper blue tint — pain section */
+      --color-surface-2:  #F2F6FF;   /* lighter blue tint — why section */
 
-      --serif:  'DM Serif Display', Georgia, serif;
-      --sans:   'IBM Plex Sans', system-ui, sans-serif;
-      --mono:   'IBM Plex Mono', 'Courier New', monospace;
+      --gradient-text: linear-gradient(90deg, var(--color-primary), var(--color-secondary), var(--color-primary));
+      --gradient-diagonal: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
 
-      --max-w:  1080px;
-      --bar-h:  44px;
-      --nav-h:  60px;
+      --font-main: 'DM Sans', sans-serif;
+
+      --space-xs:   0.5rem;
+      --space-sm:   1rem;
+      --space-md:   2rem;
+      --space-lg:   5rem;
+      --space-xl:   10rem;
+
+      --container-max: 75rem;
+      --container-pad: clamp(1.5rem, 5vw, 4rem);
+
+      --ease-smooth: cubic-bezier(0.19, 1, 0.22, 1);
+      --ease-sharp:  cubic-bezier(0.77, 0, 0.175, 1);
+
+      --nav-h: 70px;
     }
 
-    /* ─── RESET ───────────────────────────────────────────────── */
+    /* ─── RESET ──────────────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--sans);
-      font-weight: 400;
-      font-size: 16px;
-      line-height: 1.6;
-      color: var(--ink);
-      background: var(--paper);
-      padding-top: calc(var(--bar-h) + var(--nav-h));
-      -webkit-font-smoothing: antialiased;
-    }
-    a { color: inherit; text-decoration: none; }
-    ul { list-style: none; }
-    button { cursor: pointer; font-family: inherit; border: none; background: none; }
 
-    /* ─── VIEW BAR ────────────────────────────────────────────── */
-    .view-bar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: var(--bar-h);
-      background: #0a0f1a;
-      z-index: 300;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-main);
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--color-dark);
+      background-color: var(--color-bg);
+      -webkit-font-smoothing: antialiased;
+      padding-top: var(--nav-h);
     }
-    .view-bar-label {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.14em;
-      color: rgba(255,255,255,0.3);
-      text-transform: uppercase;
+
+    a {
+      color: var(--color-dark);
+      font-weight: 600;
+      text-decoration: underline;
+      transition: color 0.2s var(--ease-smooth);
     }
-    .view-toggle {
-      display: flex;
-      background: rgba(255,255,255,0.06);
-      border-radius: 4px;
-      padding: 3px;
-      gap: 2px;
+    a:hover { color: var(--color-primary); }
+    a:visited { color: var(--color-dark); }
+
+    img { max-width: 100%; display: block; }
+    ul { list-style: none; }
+
+    /* ─── TYPOGRAPHY ─────────────────────────────────────────────────── */
+    h1 {
+      font-family: var(--font-main);
+      font-size: clamp(40px, 5vw, 62px);
+      font-weight: 700;
+      line-height: 1.15em;
+      margin: 0;
     }
-    .view-toggle-btn {
-      font-family: var(--mono);
-      font-size: 0.6rem;
+
+    .hero-static { color: var(--color-dark); }
+
+    .hero-rotating {
+      color: var(--color-primary);
+      display: block;
+      min-height: 1.15em;
+      white-space: nowrap;
+      transition: opacity 0.5s ease;
+    }
+    @media (max-width: 767px) {
+      .hero-rotating { white-space: normal; }
+    }
+    .hero-rotating.fade { opacity: 0; }
+
+    h2 {
+      font-family: var(--font-main);
+      font-size: clamp(34px, 5vw, 56px);
+      font-weight: 700;
+      line-height: 1.12em;
+      margin: 0;
+    }
+
+    h3 {
+      font-family: var(--font-main);
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 600;
+      line-height: 1.3em;
+      margin: 0;
+    }
+
+    h4 {
+      font-family: var(--font-main);
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.1em;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      padding: 4px 12px;
-      border-radius: 3px;
-      color: rgba(255,255,255,0.45);
-      transition: all 0.15s;
-    }
-    .view-toggle-btn.active {
-      background: var(--blue);
-      color: var(--white);
-    }
-    .view-toggle-btn:hover:not(.active) {
-      color: rgba(255,255,255,0.75);
-    }
-    .internal-warning {
-      font-family: var(--mono);
-      font-size: 0.58rem;
-      letter-spacing: 0.16em;
-      color: var(--internal-accent);
-      text-transform: uppercase;
-      position: absolute;
-      right: 1.5rem;
-      opacity: 0;
-      transition: opacity 0.2s;
-      pointer-events: none;
+      margin: 0;
     }
 
-    /* ─── NAV ─────────────────────────────────────────────────── */
-    nav {
+    p {
+      font-size: 18px;
+      font-weight: 400;
+      line-height: 1.65em;
+      color: var(--color-dark);
+    }
+
+    .text-small {
+      font-size: 14px;
+      color: var(--color-muted);
+      line-height: 1.5em;
+    }
+
+    .label {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+    }
+
+    /* ─── GRADIENT TEXT ──────────────────────────────────────────────── */
+    .gradient-text {
+      background-image: var(--gradient-text);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+      animation: shimmer 7s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .gradient-text-diagonal {
+      background-image: var(--gradient-diagonal);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ─── CONTAINER ──────────────────────────────────────────────────── */
+    .container {
+      width: 100%;
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: 0 var(--container-pad);
+      position: relative;
+    }
+
+    .section {
+      margin-bottom: 0;
+    }
+
+    /* ─── NAV ────────────────────────────────────────────────────────── */
+    .nav {
       position: fixed;
-      top: var(--bar-h);
-      left: 0; right: 0;
+      top: 0;
+      left: 0;
+      right: 0;
       height: var(--nav-h);
-      background: rgba(17,24,39,0.96);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      z-index: 200;
+      z-index: 100;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 2.5rem;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 0 var(--container-pad);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: box-shadow 0.3s var(--ease-smooth);
     }
+
+    .nav.scrolled {
+      box-shadow: 0 2px 24px rgba(0, 73, 209, 0.08);
+    }
+
     .nav-brand {
-      font-family: var(--serif);
-      font-size: 1.05rem;
-      color: var(--white);
-      letter-spacing: 0.01em;
+      font-family: var(--font-main);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-primary);
+      text-decoration: none;
+      letter-spacing: -0.01em;
+      transition: opacity 0.2s var(--ease-smooth);
     }
+    .nav-brand:visited { color: var(--color-primary); }
+    .nav-brand:hover { opacity: 0.7; color: var(--color-primary); }
+
     .nav-links {
       display: flex;
-      gap: 2rem;
-    }
-    .nav-links a {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted-lt);
-      transition: color 0.15s;
-    }
-    .nav-links a:hover { color: var(--white); }
-
-    /* ─── CONTAINER ───────────────────────────────────────────── */
-    .container {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      padding: 0 2.5rem;
-    }
-
-    /* ─── SECTION TAG ─────────────────────────────────────────── */
-    .section-tag {
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted-lt);
-      display: block;
-      margin-bottom: 1.5rem;
-    }
-    .section-tag.on-dark { color: rgba(255,255,255,0.35); }
-    .section-tag.internal { color: var(--internal-accent); }
-
-    /* ─── REVEAL ANIMATION ────────────────────────────────────── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.55s ease, transform 0.55s ease;
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: none;
-    }
-    .reveal-d1 { transition-delay: 0.1s; }
-    .reveal-d2 { transition-delay: 0.2s; }
-    .reveal-d3 { transition-delay: 0.3s; }
-    .reveal-d4 { transition-delay: 0.4s; }
-
-    /* ════════════════════════════════════════════════════════════
-       CLIENT VIEW
-    ════════════════════════════════════════════════════════════ */
-
-    /* ─── HERO ────────────────────────────────────────────────── */
-    #hero {
-      background: var(--ink);
-      min-height: calc(100vh - var(--bar-h) - var(--nav-h));
-      display: flex;
       align-items: center;
-      padding: 6rem 0 5rem;
+      gap: 2.5rem;
     }
-    .hero-inner {
-      max-width: 680px;
-    }
-    .hero-eyebrow {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.2em;
+
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.35);
-      margin-bottom: 2rem;
-      display: block;
+      text-decoration: none;
+      color: var(--color-muted);
+      transition: color 0.2s var(--ease-smooth);
     }
-    .hero-title {
-      font-family: var(--serif);
-      font-size: clamp(2.8rem, 6vw, 4.4rem);
-      line-height: 1.08;
-      color: var(--white);
-      margin-bottom: 1.5rem;
-      font-weight: 400;
-    }
-    .hero-rule {
-      width: 72px;
-      height: 1px;
-      background: var(--blue);
-      margin-bottom: 1.5rem;
-    }
-    .hero-sub {
-      font-size: 1.05rem;
-      line-height: 1.65;
-      color: var(--muted-lt);
-      max-width: 520px;
-      margin-bottom: 2.5rem;
-      font-weight: 300;
-    }
-    .hero-cta-group {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      align-items: flex-start;
-    }
-    .btn-primary {
+    .nav-links a:hover { color: var(--color-primary); }
+    .nav-links a:visited { color: var(--color-muted); }
+
+    .nav-cta {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      background: var(--blue);
-      color: var(--white);
-      font-family: var(--sans);
-      font-size: 0.88rem;
-      font-weight: 500;
-      padding: 0.8rem 1.6rem;
-      border-radius: 3px;
-      transition: background 0.15s;
-      letter-spacing: 0.01em;
-      border: none;
-      cursor: pointer;
+      gap: 0.4rem;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--color-primary) !important;
+      border: 1.5px solid var(--color-primary);
+      padding: 0.5rem 1.2rem;
+      text-decoration: none !important;
+      transition: background 0.25s var(--ease-smooth), color 0.25s var(--ease-smooth) !important;
     }
-    .btn-primary:hover { background: var(--blue-hover); }
-    .hero-microcopy {
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      color: rgba(255,255,255,0.28);
-      letter-spacing: 0.04em;
+    .nav-cta:hover {
+      background: var(--color-primary) !important;
+      color: var(--color-white) !important;
     }
-    .hero-ghost-link {
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      letter-spacing: 0.08em;
-      color: rgba(255,255,255,0.4);
-      margin-top: 0.25rem;
-      transition: color 0.15s;
-    }
-    .hero-ghost-link:hover { color: rgba(255,255,255,0.7); }
 
-    /* ─── SERVICES ────────────────────────────────────────────── */
-    #services {
-      background: var(--paper);
-      padding: 6rem 0;
-      border-top: 1px solid var(--border-light);
+    /* ─── HERO ───────────────────────────────────────────────────────── */
+    #hero {
+      padding: clamp(3rem, 7vh, 5rem) 0 clamp(3rem, 6vh, 4.5rem);
+      min-height: calc(100vh - var(--nav-h));
+      display: flex;
+      align-items: center;
     }
-    .services-header {
-      margin-bottom: 3.5rem;
+
+    .hero-inner {
+      max-width: 860px;
     }
-    .services-title {
-      font-family: var(--serif);
-      font-size: clamp(2rem, 4vw, 2.8rem);
-      line-height: 1.15;
-      color: var(--ink);
-      margin-bottom: 0.75rem;
+
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
     }
-    .services-sub {
-      font-size: 0.95rem;
-      color: var(--muted);
-      max-width: 480px;
-      font-weight: 300;
+
+    .hero-eyebrow-line {
+      width: 32px;
+      height: 1px;
+      background: var(--color-primary);
+      flex-shrink: 0;
     }
-    .pillars-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
+
+    .hero-eyebrow-text {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+    }
+
+    .hero-title {
       margin-bottom: 3rem;
     }
-    .pillar-card {
-      background: var(--white);
-      border: 1px solid var(--border-light);
-      border-top: 3px solid var(--blue);
-      padding: 2.2rem 2rem;
-    }
-    .pillar-label {
-      font-family: var(--mono);
-      font-size: 0.58rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--blue);
-      margin-bottom: 0.75rem;
-      display: block;
-    }
-    .pillar-title {
-      font-family: var(--serif);
-      font-size: 1.5rem;
-      color: var(--ink);
-      margin-bottom: 0.6rem;
+
+    .hero-sub {
+      font-size: clamp(18px, 2.4vw, 22px);
       font-weight: 400;
+      line-height: 1.65em;
+      color: var(--color-dark);
+      opacity: 0.72;
+      max-width: 580px;
+      margin-bottom: 2.5rem;
     }
-    .pillar-desc {
-      font-size: 0.88rem;
-      color: var(--muted);
-      font-weight: 300;
-      margin-bottom: 1.4rem;
-      line-height: 1.6;
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 3rem;
+      flex-wrap: wrap;
     }
-    .pillar-list {
+
+    .hero-meta {
+      font-size: 14px;
+      color: var(--color-muted);
+      text-decoration: none;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      transition: color 0.2s var(--ease-smooth);
+    }
+    .hero-meta:hover { color: var(--color-primary); }
+    .hero-meta:visited { color: var(--color-muted); }
+
+    /* ─── CTA CIRCLE ─────────────────────────────────────────────────── */
+    .cta-circle {
+      width: 8rem;
+      height: 8rem;
+      border: 1.5px solid var(--color-primary);
+      border-radius: 50%;
+      color: var(--color-primary);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
       display: flex;
       flex-direction: column;
-      gap: 0.45rem;
+      justify-content: center;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background-color 0.3s var(--ease-smooth), color 0.3s var(--ease-smooth);
+      flex-shrink: 0;
     }
-    .pillar-list li {
-      font-size: 0.85rem;
-      color: #374151;
-      padding-left: 1rem;
+    .cta-circle:hover {
+      background-color: var(--color-primary);
+      color: var(--color-bg);
+    }
+    .cta-circle:visited { color: var(--color-primary); }
+    .cta-circle:hover, .cta-circle:hover:visited { color: var(--color-bg); }
+
+    .cta-circle-arrow {
+      font-size: 22px;
+      font-weight: 300;
+      line-height: 1;
+      transition: transform 0.3s var(--ease-smooth);
+    }
+    .cta-circle:hover .cta-circle-arrow {
+      transform: translate(2px, -2px);
+    }
+
+    /* ─── SCROLL PROGRESS ───────────────────────────────────────────── */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      width: 0%;
+      background: var(--color-primary);
+      z-index: 200;
+      transition: width 0.08s linear;
+    }
+
+    /* ─── REVEAL ANIMATIONS ──────────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(1.75rem);
+      transition: opacity 0.65s var(--ease-smooth), transform 0.65s var(--ease-smooth);
+    }
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal:nth-child(2) { transition-delay: 0.1s; }
+    .reveal:nth-child(3) { transition-delay: 0.2s; }
+    .reveal:nth-child(4) { transition-delay: 0.3s; }
+
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-2.5rem);
+      transition: opacity 0.7s var(--ease-smooth), transform 0.7s var(--ease-smooth);
+    }
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(2.5rem);
+      transition: opacity 0.7s var(--ease-smooth), transform 0.7s var(--ease-smooth);
+    }
+    .reveal-left.is-visible { opacity: 1; transform: translateX(0); }
+    .reveal-right.is-visible { opacity: 1; transform: translateX(0); }
+
+    /* ─── PAIN / INTRO SECTION ───────────────────────────────────────── */
+    #pain {
+      padding: clamp(4.5rem, 9vh, 8rem) 0;
+      background: var(--color-bg);
+    }
+
+    .pain-inner {
+      max-width: 820px;
+      padding-left: 2.5rem;
       position: relative;
     }
-    .pillar-list li::before {
+    .pain-inner::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 3px;
+      height: 0;
+      background: var(--color-primary);
+      transition: height 1.4s var(--ease-smooth);
+    }
+    .pain-inner.border-grown::before { height: 100%; }
+
+    .pain-lead {
+      font-size: clamp(28px, 4.5vw, 48px);
+      font-weight: 700;
+      line-height: 1.2em;
+      color: var(--color-dark);
+      margin-bottom: 2rem;
+    }
+
+    .pain-body {
+      font-size: clamp(17px, 2vw, 20px);
+      font-weight: 400;
+      line-height: 1.8em;
+      color: var(--color-dark);
+      opacity: 0.65;
+    }
+
+    .pain-body strong {
+      color: var(--color-dark);
+      font-weight: 700;
+      opacity: 1;
+      -webkit-text-fill-color: initial;
+    }
+
+    /* ─── STATEMENT SECTION ─────────────────────────────────────────── */
+    .statement-section {
+      padding: clamp(5rem, 10vh, 9rem) 0;
+    }
+
+    .statement-text {
+      font-size: clamp(38px, 7.5vw, 96px);
+      font-weight: 700;
+      line-height: 1.2em;
+    }
+
+    .line-reveal {
+      display: block;
+      overflow: hidden;
+    }
+    .line-reveal-inner {
+      display: block;
+      transform: translateY(110%);
+      transition: transform 1s var(--ease-smooth);
+    }
+    .line-reveal:nth-child(2) .line-reveal-inner { transition-delay: 0.15s; }
+    .line-reveal:nth-child(3) .line-reveal-inner { transition-delay: 0.3s; }
+    .line-reveal-inner.is-visible { transform: translateY(0); }
+
+    /* ─── SERVICES SECTION ───────────────────────────────────────────── */
+    #services {
+      padding: clamp(4.5rem, 9vh, 8rem) 0;
+    }
+
+    .services-header {
+      margin-bottom: 4.5rem;
+    }
+
+    .services-label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .services-label-line {
+      width: 24px;
+      height: 1px;
+      background: var(--color-primary);
+    }
+
+    .services-title {
+      margin-bottom: 1rem;
+    }
+
+    .services-sub {
+      font-size: clamp(16px, 2vw, 18px);
+      font-weight: 400;
+      color: var(--color-muted);
+      max-width: 440px;
+      line-height: 1.6em;
+    }
+
+    /* ─── ACCORDION ──────────────────────────────────────────────────── */
+    .accordion-item {
+      max-height: 7.5rem;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(0, 73, 209, 0.15);
+      transition: max-height 0.9s var(--ease-smooth), background 0.3s var(--ease-smooth);
+      position: relative;
+    }
+
+    .accordion-item:first-child {
+      border-top: 1px solid rgba(0, 73, 209, 0.15);
+    }
+
+    .accordion-item.is-open {
+      max-height: 700px;
+    }
+
+    .accordion-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      gap: 2rem;
+      padding: 2rem 0;
+      user-select: none;
+    }
+
+    .accordion-number {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      color: var(--color-primary);
+      flex-shrink: 0;
+      width: 2.5rem;
+      opacity: 0.7;
+    }
+
+    .accordion-title {
+      flex: 1;
+      font-size: clamp(24px, 3.8vw, 44px);
+      font-weight: 700;
+      color: var(--color-dark);
+      transition: color 0.25s var(--ease-smooth);
+      line-height: 1.1em;
+    }
+
+    .accordion-item:hover .accordion-title,
+    .accordion-item.is-open .accordion-title {
+      color: var(--color-primary);
+    }
+
+    .accordion-icon {
+      color: var(--color-primary);
+      transition: transform 0.5s var(--ease-smooth);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      font-weight: 300;
+      line-height: 1;
+      width: 2rem;
+    }
+
+    .accordion-item.is-open .accordion-icon {
+      transform: rotate(45deg);
+    }
+
+    .accordion-body {
+      opacity: 0;
+      transform: translateY(0.75rem);
+      transition: transform 0.5s var(--ease-smooth), opacity 0.45s var(--ease-smooth);
+      padding-bottom: 2.5rem;
+    }
+
+    .accordion-item.is-open .accordion-body {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .accordion-body-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem 5rem;
+      padding-left: calc(2.5rem + 2rem);
+    }
+
+    .accordion-what {
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.75em;
+      color: var(--color-dark);
+      opacity: 0.65;
+    }
+
+    .accordion-what li {
+      padding: 0.35rem 0;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .accordion-what li::before {
       content: '—';
       position: absolute;
       left: 0;
-      color: var(--blue);
-      font-size: 0.7rem;
-    }
-    .exit-tracks {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-top: 1.4rem;
-    }
-    .exit-track {
-      background: var(--paper);
-      border: 1px solid var(--border-light);
-      border-left: 2px solid var(--blue);
-      padding: 1rem 1.1rem;
-    }
-    .exit-track-title {
-      font-family: var(--sans);
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--ink);
-      margin-bottom: 0.35rem;
-    }
-    .exit-track-desc {
-      font-size: 0.78rem;
-      color: var(--muted);
-      font-weight: 300;
-      line-height: 1.5;
-    }
-    .who-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-    }
-    .who-chip {
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.06em;
-      color: var(--muted);
-      border: 1px solid var(--border-light);
-      padding: 0.45rem 0.9rem;
-      border-radius: 100px;
-      background: var(--white);
+      color: var(--color-primary);
+      font-size: 0.7em;
+      top: 0.5em;
     }
 
-    /* ─── PACKAGES ────────────────────────────────────────────── */
-    #packages {
-      background: var(--ink2);
-      padding: 6rem 0;
-    }
-    .packages-header {
-      margin-bottom: 3rem;
-    }
-    .packages-title {
-      font-family: var(--serif);
-      font-size: clamp(2rem, 4vw, 2.8rem);
-      line-height: 1.15;
-      color: var(--white);
-      margin-bottom: 0.75rem;
-    }
-    .packages-sub {
-      font-size: 0.95rem;
-      color: var(--muted-lt);
-      font-weight: 300;
-    }
-    .packages-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.06);
-      margin-bottom: 3rem;
-    }
-    .pkg-card {
-      background: rgba(255,255,255,0.02);
-      border-left: 3px solid var(--blue);
-      padding: 2rem 1.8rem;
-      transition: background 0.15s;
-    }
-    .pkg-card:hover { background: rgba(255,255,255,0.05); }
-    .pkg-name {
-      font-family: var(--serif);
-      font-size: 1.15rem;
-      color: var(--white);
-      margin-bottom: 0.5rem;
-      font-weight: 400;
-    }
-    .pkg-question {
-      font-size: 0.85rem;
-      font-style: italic;
-      color: var(--muted-lt);
-      margin-bottom: 1.1rem;
-      font-weight: 300;
-    }
-    .pkg-list {
+    .accordion-outcome {
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
-    }
-    .pkg-list li {
-      font-size: 0.8rem;
-      color: rgba(255,255,255,0.5);
-      padding-left: 0.9rem;
-      position: relative;
-      font-weight: 300;
-    }
-    .pkg-list li::before {
-      content: '·';
-      position: absolute;
-      left: 0;
-      color: var(--blue-pale);
-    }
-    .packages-footer {
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       gap: 0.75rem;
     }
-    .btn-outline {
+
+    .outcome-tag {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      border: 1px solid var(--blue);
-      color: var(--blue-pale);
-      font-family: var(--sans);
-      font-size: 0.85rem;
-      font-weight: 500;
-      padding: 0.75rem 1.5rem;
-      border-radius: 3px;
-      transition: all 0.15s;
-      background: none;
-      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--color-primary);
+      text-transform: uppercase;
     }
-    .btn-outline:hover {
-      background: var(--blue);
-      color: var(--white);
-    }
-    .ghost-link {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.08em;
-      color: rgba(255,255,255,0.3);
-      transition: color 0.15s;
-    }
-    .ghost-link:hover { color: rgba(255,255,255,0.6); }
 
-    /* ─── CONTACT ─────────────────────────────────────────────── */
-    #contact {
-      background: var(--paper2);
-      padding: 6rem 0;
-      border-top: 1px solid var(--border-light);
+    .outcome-tag::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      flex-shrink: 0;
     }
-    .contact-inner {
-      max-width: 640px;
+
+    .outcome-text {
+      font-size: clamp(15px, 1.8vw, 17px);
+      font-weight: 400;
+      color: var(--color-dark);
+      line-height: 1.65em;
     }
-    .contact-title {
-      font-family: var(--serif);
-      font-size: clamp(2rem, 4vw, 2.8rem);
-      line-height: 1.12;
-      color: var(--ink);
+
+    /* ─── WHY SECTION ────────────────────────────────────────────────── */
+    #why {
+      padding: clamp(4.5rem, 9vh, 8rem) 0;
+      background: var(--color-surface-2);
+      border-top: 1px solid rgba(0, 73, 209, 0.1);
+      border-bottom: 1px solid rgba(0, 73, 209, 0.1);
+    }
+
+    .two-col {
+      display: flex;
+      align-items: flex-start;
+      gap: 5rem;
+    }
+
+    .two-col__sidebar {
+      width: 26%;
+      flex-shrink: 0;
+      position: sticky;
+      top: calc(var(--nav-h) + 3rem);
+    }
+
+    .two-col__main {
+      flex: 1;
+    }
+
+    .why-sidebar-label {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      display: block;
       margin-bottom: 1rem;
     }
-    .contact-sub {
-      font-size: 0.95rem;
-      color: var(--muted);
-      font-weight: 300;
-      line-height: 1.65;
-      margin-bottom: 2.5rem;
-      max-width: 480px;
-    }
-    .contact-form {
-      display: flex;
-      flex-direction: column;
-      gap: 1.1rem;
-    }
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-    .form-field {
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-    }
-    .form-field label {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .form-field input,
-    .form-field textarea {
-      font-family: var(--sans);
-      font-size: 0.9rem;
-      color: var(--ink);
-      background: var(--white);
-      border: 1px solid var(--border-light);
-      border-radius: 2px;
-      padding: 0.7rem 0.9rem;
-      outline: none;
-      transition: border-color 0.15s;
-      width: 100%;
-      resize: none;
-    }
-    .form-field input:focus,
-    .form-field textarea:focus { border-color: var(--blue); }
-    .form-field textarea { min-height: 90px; }
-    .btn-submit {
-      align-self: flex-start;
-      background: var(--ink);
-      color: var(--white);
-      font-family: var(--sans);
-      font-size: 0.88rem;
-      font-weight: 500;
-      padding: 0.8rem 1.6rem;
-      border-radius: 3px;
-      transition: background 0.15s;
-      cursor: pointer;
-      border: none;
-    }
-    .btn-submit:hover:not(:disabled) { background: #1f2937; }
-    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    /* ─── FOOTER ──────────────────────────────────────────────── */
-    footer {
-      background: var(--ink);
-      padding: 2rem 2.5rem;
+    .why-sidebar-heading {
+      font-size: clamp(26px, 3.5vw, 38px);
+      font-weight: 700;
+      color: var(--color-dark);
+      line-height: 1.15em;
+    }
+
+    .why-items {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .why-item {
+      display: grid;
+      grid-template-columns: 3rem 1fr;
+      gap: 0 1.5rem;
+      align-items: start;
+      padding: 2.25rem 0;
+      border-bottom: 1px solid rgba(0, 73, 209, 0.1);
+    }
+
+    .why-item:first-child {
+      border-top: 1px solid rgba(0, 73, 209, 0.1);
+    }
+
+    .why-num {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      color: var(--color-primary);
+      padding-top: 0.35rem;
+      opacity: 0.7;
+    }
+
+    .why-title {
+      font-size: clamp(20px, 2.5vw, 26px);
+      font-weight: 700;
+      color: var(--color-dark);
+      margin-bottom: 0.6rem;
+      line-height: 1.25em;
+    }
+
+    .why-desc {
+      font-size: clamp(15px, 1.8vw, 17px);
+      font-weight: 400;
+      color: var(--color-dark);
+      opacity: 0.6;
+      line-height: 1.7em;
+    }
+
+    /* ─── CONTACT SECTION ────────────────────────────────────────────── */
+    #contact {
+      padding: clamp(5rem, 11vh, 9rem) 0;
+    }
+
+    .contact-inner {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 5rem;
+      flex-wrap: wrap;
+    }
+
+    .contact-left {
+      max-width: 580px;
+      flex: 1;
+    }
+
+    .contact-label {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .contact-label-line {
+      width: 24px;
+      height: 1px;
+      background: var(--color-primary);
+    }
+
+    .contact-label-text {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+    }
+
+    .contact-title {
+      margin-bottom: 1.75rem;
+    }
+
+    .contact-body {
+      font-size: clamp(17px, 2vw, 20px);
+      font-weight: 400;
+      line-height: 1.75em;
+      color: var(--color-dark);
+      opacity: 0.65;
+      margin-bottom: 2.75rem;
+    }
+
+    .contact-email-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: clamp(16px, 2vw, 20px);
+      font-weight: 600;
+      color: var(--color-primary);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+      transition: opacity 0.2s var(--ease-smooth);
+    }
+    .contact-email-link:hover { opacity: 0.65; color: var(--color-primary); }
+    .contact-email-link:visited { color: var(--color-primary); }
+
+    .contact-right {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+      flex-shrink: 0;
+      padding-top: 1rem;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────────────────────── */
+    .footer {
+      background: var(--color-surface-2);
+      border-top: 1px solid rgba(0, 73, 209, 0.1);
+      padding: 4rem 0 3rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 1.5rem 3rem;
+      margin-bottom: 3.5rem;
+      align-items: start;
+    }
+
+    .footer-brand-name {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: 0.6rem;
+    }
+
+    .footer-tagline {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--color-muted);
+      line-height: 1.65em;
+      max-width: 230px;
+    }
+
+    .footer-col-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      margin-bottom: 1.1rem;
+      display: block;
+      opacity: 0.7;
+    }
+
+    .footer-nav a {
+      display: block;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--color-dark);
+      margin-bottom: 0.65rem;
+      transition: color 0.2s var(--ease-smooth);
+      opacity: 0.75;
+    }
+    .footer-nav a:hover { color: var(--color-primary); opacity: 1; }
+    .footer-nav a:visited { color: var(--color-dark); }
+
+    .footer-contact-email {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-primary);
+      text-decoration: none;
+      transition: opacity 0.2s var(--ease-smooth);
+      display: block;
+      margin-bottom: 0.6rem;
+    }
+    .footer-contact-email:hover { opacity: 0.65; }
+    .footer-contact-email:visited { color: var(--color-primary); }
+
+    .footer-bottom {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-top: 1px solid rgba(255,255,255,0.05);
-    }
-    .footer-brand {
-      font-family: var(--serif);
-      font-size: 0.95rem;
-      color: var(--white);
-    }
-    .footer-meta {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.1em;
-      color: rgba(255,255,255,0.25);
+      padding-top: 2rem;
+      border-top: 1px solid rgba(0, 73, 209, 0.1);
     }
 
-    /* ════════════════════════════════════════════════════════════
-       INTERNAL VIEW
-    ════════════════════════════════════════════════════════════ */
-    .internal-view {
-      background: var(--internal-bg);
-    }
-    .int-section {
-      padding: 5.5rem 0;
-      border-top: 1px solid rgba(255,255,255,0.05);
-    }
-    .int-section:first-child { border-top: none; }
-    .int-title {
-      font-family: var(--serif);
-      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
-      color: var(--white);
-      margin-bottom: 0.75rem;
+    .footer-copy {
+      font-size: 13px;
       font-weight: 400;
-    }
-    .int-lead {
-      font-size: 0.92rem;
-      color: var(--muted-lt);
-      font-weight: 300;
-      max-width: 540px;
-      line-height: 1.65;
-      margin-bottom: 2.5rem;
+      color: var(--color-muted);
+      opacity: 0.7;
     }
 
-    /* Persona */
-    .persona-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.07);
-      border-left: 3px solid var(--internal-accent);
-      padding: 2.2rem 2rem;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem 3rem;
-    }
-    .persona-field-label {
-      font-family: var(--mono);
-      font-size: 0.58rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--internal-accent);
-      margin-bottom: 0.5rem;
-      display: block;
-    }
-    .persona-field-value {
-      font-size: 0.88rem;
-      color: rgba(255,255,255,0.65);
-      font-weight: 300;
-      line-height: 1.6;
-    }
-    .persona-field-value strong {
-      color: var(--white);
-      font-weight: 500;
+    /* ─── RESPONSIVE ─────────────────────────────────────────────────── */
+    @media (max-width: 991px) {
+      h1 { font-size: 54px; }
+      p  { font-size: 17px; }
+
+      .two-col { flex-direction: column; gap: 3rem; }
+      .two-col__sidebar { width: 100%; position: static; }
+
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+
+      .accordion-body-inner { grid-template-columns: 1fr; gap: 1.5rem; }
     }
 
-    /* Tone guide */
-    .tone-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.05);
-      margin-bottom: 2.5rem;
-    }
-    .tone-card {
-      background: rgba(255,255,255,0.02);
-      padding: 1.8rem 1.6rem;
-    }
-    .tone-card-title {
-      font-family: var(--sans);
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--internal-accent);
-      margin-bottom: 0.75rem;
-    }
-    .tone-example {
-      font-size: 0.82rem;
-      color: rgba(255,255,255,0.5);
-      line-height: 1.6;
-      font-weight: 300;
-    }
-    .tone-example em {
-      display: block;
-      color: rgba(255,255,255,0.75);
-      margin-bottom: 0.35rem;
-      font-style: normal;
-    }
-    .tone-example s {
-      color: rgba(255,255,255,0.28);
-      font-style: italic;
-      text-decoration: line-through;
-    }
-    .word-lists {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-    }
-    .word-list-title {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      margin-bottom: 0.75rem;
-    }
-    .word-list-title.avoid { color: #f87171; }
-    .word-list-title.use   { color: var(--internal-accent); }
-    .word-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-    }
-    .word-tag {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      padding: 0.3rem 0.65rem;
-      border-radius: 2px;
-    }
-    .word-tag.avoid {
-      background: rgba(248,113,113,0.1);
-      color: #f87171;
-      border: 1px solid rgba(248,113,113,0.2);
-    }
-    .word-tag.use {
-      background: rgba(56,189,248,0.08);
-      color: var(--internal-accent);
-      border: 1px solid rgba(56,189,248,0.2);
+    @media (max-width: 767px) {
+      h1 { font-size: 42px; }
+
+      .section { margin-bottom: 5rem; }
+
+      #hero {
+        padding-top: 3.5rem;
+        padding-bottom: 3.5rem;
+        min-height: auto;
+      }
+
+      .hero-actions { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+
+      .accordion-title { font-size: 24px; }
+      .accordion-body-inner { padding-left: 0; }
+
+      .contact-inner { flex-direction: column; gap: 2.5rem; }
+      .contact-right { align-items: flex-start; padding-top: 0; }
+
+      .footer-grid { grid-template-columns: 1fr; }
+
+      .statement-text { font-size: clamp(30px, 9vw, 62px); }
+
+      .nav-links .nav-hide-mobile { display: none; }
     }
 
-    /* Int packages */
-    .int-pkg-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-    .int-pkg {
-      background: var(--internal-bg);
-      padding: 1.8rem 2rem;
-      display: grid;
-      grid-template-columns: 200px 1fr 1fr;
-      gap: 2rem;
-      align-items: start;
-      transition: background 0.15s;
-    }
-    .int-pkg:hover { background: rgba(255,255,255,0.02); }
-    .int-pkg-name {
-      font-family: var(--serif);
-      font-size: 1rem;
-      color: var(--white);
-      font-weight: 400;
-      margin-bottom: 0.3rem;
-    }
-    .int-pkg-trigger {
-      font-size: 0.78rem;
-      color: var(--muted-lt);
-      font-weight: 300;
-      font-style: italic;
-    }
-    .int-pkg-col-label {
-      font-family: var(--mono);
-      font-size: 0.55rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--internal-accent);
-      margin-bottom: 0.4rem;
-      display: block;
-    }
-    .int-pkg-col-text {
-      font-size: 0.82rem;
-      color: rgba(255,255,255,0.6);
-      font-weight: 300;
-      line-height: 1.55;
-    }
-    .int-pkg-col-text strong {
-      color: rgba(255,255,255,0.8);
-      font-weight: 500;
-    }
-    .int-pkg-price {
-      display: inline-block;
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--internal-accent);
-      background: rgba(56,189,248,0.08);
-      border: 1px solid rgba(56,189,248,0.2);
-      padding: 0.2rem 0.55rem;
-      border-radius: 2px;
-      margin-top: 0.5rem;
-    }
-
-    /* Sales process */
-    .sales-steps {
-      position: relative;
-      padding-left: 2.5rem;
-    }
-    .sales-steps::before {
-      content: '';
-      position: absolute;
-      left: 7px;
-      top: 8px;
-      bottom: 8px;
-      width: 1px;
-      background: rgba(56,189,248,0.2);
-    }
-    .sales-step {
-      position: relative;
-      padding-bottom: 2.5rem;
-    }
-    .sales-step:last-child { padding-bottom: 0; }
-    .sales-step::before {
-      content: '';
-      position: absolute;
-      left: -2.5rem;
-      top: 6px;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--internal-accent);
-    }
-    .sales-step-num {
-      font-family: var(--mono);
-      font-size: 0.58rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--internal-accent);
-      margin-bottom: 0.35rem;
-      display: block;
-    }
-    .sales-step-title {
-      font-family: var(--sans);
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--white);
-      margin-bottom: 0.4rem;
-    }
-    .sales-step-desc {
-      font-size: 0.85rem;
-      color: var(--muted-lt);
-      font-weight: 300;
-      line-height: 1.6;
-      max-width: 560px;
-    }
-
-    /* ─── MODAL ───────────────────────────────────────────────── */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.75);
-      z-index: 400;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      backdrop-filter: blur(4px);
-    }
-    .modal-overlay[hidden] { display: none; }
-    .modal-card {
-      background: var(--white);
-      border-radius: 4px;
-      padding: 2.5rem;
-      max-width: 540px;
-      width: 100%;
-      position: relative;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    .modal-close {
-      position: absolute;
-      top: 1rem; right: 1rem;
-      font-size: 1.1rem;
-      color: var(--muted);
-      padding: 0.25rem 0.5rem;
-      transition: color 0.15s;
-      background: none;
-      border: none;
-      cursor: pointer;
-    }
-    .modal-close:hover { color: var(--ink); }
-    .modal-title {
-      font-family: var(--serif);
-      font-size: 1.6rem;
-      color: var(--ink);
-      margin-bottom: 0.4rem;
-      font-weight: 400;
-    }
-    .modal-sub {
-      font-size: 0.85rem;
-      color: var(--muted);
-      font-weight: 300;
-      margin-bottom: 1.8rem;
-      line-height: 1.6;
-    }
-    .modal-form {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    .modal-inputs-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.8rem;
-    }
-    .modal-field {
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
-    }
-    .modal-field label {
-      font-family: var(--mono);
-      font-size: 0.58rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-    .modal-field input {
-      font-family: var(--sans);
-      font-size: 0.88rem;
-      color: var(--ink);
-      background: var(--paper);
-      border: 1px solid var(--border-light);
-      border-radius: 2px;
-      padding: 0.6rem 0.8rem;
-      outline: none;
-      transition: border-color 0.15s;
-    }
-    .modal-field input:focus { border-color: var(--blue); }
-    .modal-email-section {
-      border-top: 1px solid var(--border-light);
-      padding-top: 1rem;
-      margin-top: 0.25rem;
-    }
-    .modal-email-label {
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--ink);
-      font-weight: 500;
-      display: block;
-      margin-bottom: 0.4rem;
-    }
-    .modal-email-input {
-      font-family: var(--sans);
-      font-size: 0.95rem;
-      color: var(--ink);
-      background: var(--white);
-      border: 1px solid #d1d5db;
-      border-radius: 2px;
-      padding: 0.7rem 0.9rem;
-      outline: none;
-      width: 100%;
-      transition: border-color 0.15s;
-    }
-    .modal-email-input:focus { border-color: var(--blue); }
-    .modal-submit {
-      background: var(--blue);
-      color: var(--white);
-      font-family: var(--sans);
-      font-size: 0.9rem;
-      font-weight: 500;
-      padding: 0.85rem 1.5rem;
-      border-radius: 3px;
-      width: 100%;
-      transition: background 0.15s;
-      cursor: pointer;
-      border: none;
-    }
-    .modal-submit:hover:not(:disabled) { background: var(--blue-hover); }
-    .modal-submit:disabled { opacity: 0.6; cursor: not-allowed; }
-    .modal-success {
-      text-align: center;
-      padding: 2rem 1rem;
-    }
-    .modal-success-check {
-      font-size: 2rem;
-      color: var(--blue);
-      margin-bottom: 1rem;
-    }
-    .modal-success-title {
-      font-family: var(--serif);
-      font-size: 1.4rem;
-      color: var(--ink);
-      margin-bottom: 0.75rem;
-    }
-    .modal-success-text {
-      font-size: 0.88rem;
-      color: var(--muted);
-      font-weight: 300;
-      line-height: 1.65;
-    }
-
-    /* ─── RESPONSIVE ──────────────────────────────────────────── */
-    @media (max-width: 900px) {
-      .pillars-grid,
-      .packages-grid,
-      .exit-tracks,
-      .tone-grid,
-      .word-lists,
-      .persona-card { grid-template-columns: 1fr; }
-      .form-row { grid-template-columns: 1fr; }
-      .int-pkg { grid-template-columns: 1fr; }
-      .modal-inputs-grid { grid-template-columns: 1fr; }
-      nav { padding: 0 1.5rem; }
-      .container { padding: 0 1.5rem; }
-      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
-    }
-    @media (max-width: 600px) {
-      .view-bar-label { display: none; }
-      .internal-warning { display: none; }
-      .hero-title { font-size: 2.2rem; }
-      #hero, #services, #packages, #contact, .int-section { padding-top: 3.5rem; padding-bottom: 3.5rem; }
-      .packages-grid { grid-template-columns: 1fr; }
-      .modal-card { padding: 1.5rem; }
+    @media (max-width: 479px) {
+      h1 { font-size: 36px; }
+      h2 { font-size: 28px; }
+      p  { font-size: 16px; }
     }
   </style>
 </head>
-<body>
 
-  <!-- ═══ VIEW BAR ═══════════════════════════════════════════════ -->
-  <div class="view-bar" role="banner" aria-label="View selector">
-    <span class="view-bar-label">View:</span>
-    <div class="view-toggle" role="group" aria-label="Switch view">
-      <button class="view-toggle-btn active" data-view="client" aria-pressed="true">Client View</button>
-      <button class="view-toggle-btn" data-view="internal" aria-pressed="false">Internal View</button>
+<body>
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- ═══ NAV ════════════════════════════════════════════════════════ -->
+  <header class="nav" id="mainNav" role="banner">
+    <a class="nav-brand" href="#hero">Morety &amp; Nys</a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="#services" class="nav-hide-mobile">Solutions</a>
+      <a href="#why" class="nav-hide-mobile">Why us</a>
+      <a href="#contact" class="nav-cta">Contact →</a>
+    </nav>
+  </header>
+
+  <!-- ═══ HERO ════════════════════════════════════════════════════════ -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <div class="hero-eyebrow reveal">
+          <span class="hero-eyebrow-line"></span>
+          <span class="hero-eyebrow-text">Financial Advisory · European SMBs</span>
+        </div>
+
+        <h1 class="hero-title reveal">
+          <span class="hero-static">Cash control &amp; margins for</span>
+          <span class="hero-rotating" id="rotatingPhrase">founder-led businesses.</span>
+        </h1>
+
+        <div class="hero-actions reveal">
+          <a class="cta-circle" href="#contact" aria-label="Get in touch">
+            <span class="cta-circle-arrow">↗</span>
+            <span>Get in<br>touch</span>
+          </a>
+          <a class="hero-meta" href="mailto:moretynys@protonmail.com">or write to us directly →</a>
+        </div>
+      </div>
     </div>
-    <span class="internal-warning" aria-hidden="true">— Not for clients —</span>
+  </section>
+
+  <!-- ═══ PAIN / INTRO ════════════════════════════════════════════════ -->
+  <section id="pain">
+    <div class="container">
+      <div class="pain-inner">
+        <p class="pain-lead reveal-left">Most growing businesses manage their cash by feel.</p>
+        <p class="pain-body reveal-left">
+          No reliable short-term forecast. No clear picture of where margins actually come from. Finance running on spreadsheets and an accountant who reports two months late. Decisions made on instinct rather than data. And the nagging sense that the business is moving <strong>faster than the numbers can keep up.</strong>
+          <br><br>
+          It is what happens when growth outpaces financial infrastructure. We exist to close that gap.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ STATEMENT ══════════════════════════════════════════════════ -->
+  <div class="statement-section">
+    <div class="container">
+      <div class="statement-text" id="statementText">
+        <span class="line-reveal"><span class="line-reveal-inner gradient-text">Know your cash.</span></span>
+        <span class="line-reveal"><span class="line-reveal-inner gradient-text">Control your margins.</span></span>
+        <span class="line-reveal"><span class="line-reveal-inner gradient-text">Grow with clarity.</span></span>
+      </div>
+    </div>
   </div>
 
-  <!-- ═══ NAV ════════════════════════════════════════════════════ -->
-  <nav aria-label="Main navigation">
-    <a class="nav-brand" href="#hero">Morety &amp; Nys</a>
-    <ul class="nav-links" id="navClient">
-      <li><a href="#services">Services</a></li>
-      <li><a href="#packages">Packages</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-    <ul class="nav-links" id="navInternal" hidden>
-      <li><a href="#int-persona">Persona</a></li>
-      <li><a href="#int-tone">Tone</a></li>
-      <li><a href="#int-packages">Packages</a></li>
-      <li><a href="#int-sales">Process</a></li>
-    </ul>
-  </nav>
+  <!-- ═══ SERVICES ════════════════════════════════════════════════════ -->
+  <section id="services" class="section">
+    <div class="container">
 
-  <!-- ═══════════════════════════════════════════════════════════
-       CLIENT VIEW
-  ═══════════════════════════════════════════════════════════════ -->
-  <div id="clientView">
+      <div class="services-header reveal">
+        <div class="services-label">
+          <span class="services-label-line"></span>
+          <span class="label">Solutions</span>
+        </div>
+        <h2 class="services-title">Four engagements.<br>One clear outcome each.</h2>
+        <p class="services-sub">We focus where the leverage is — cash, working capital, margins.</p>
+      </div>
 
-    <!-- HERO -->
-    <section id="hero">
-      <div class="container">
-        <div class="hero-inner">
-          <span class="hero-eyebrow reveal">Financial Advisory for Business Owners</span>
-          <h1 class="hero-title reveal reveal-d1">We run the numbers.<br>You run the business.</h1>
-          <div class="hero-rule reveal reveal-d2"></div>
-          <p class="hero-sub reveal reveal-d2">
-            Your margins are under pressure. The bank wants answers. The world keeps moving faster.
-            You need a clear picture of where your business actually stands — not another consultant with a framework.
+      <div class="accordion-list" role="list">
+
+        <!-- 01 -->
+        <div class="accordion-item reveal" role="listitem">
+          <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+            <span class="accordion-number">01</span>
+            <span class="accordion-title">Cash Diagnostic</span>
+            <span class="accordion-icon" aria-hidden="true">+</span>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <ul class="accordion-what">
+                <li>Review of current cash visibility and reporting</li>
+                <li>Identification of risks, gaps, and inefficiencies</li>
+                <li>Prioritised action plan with clear next steps</li>
+              </ul>
+              <div class="accordion-outcome">
+                <span class="outcome-tag">Outcome</span>
+                <p class="outcome-text">A clear view of where you stand — and what to do next. Delivered in 1–2 weeks, fixed fee.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 02 -->
+        <div class="accordion-item reveal" role="listitem">
+          <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+            <span class="accordion-number">02</span>
+            <span class="accordion-title">Cash Flow Control</span>
+            <span class="accordion-icon" aria-hidden="true">+</span>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <ul class="accordion-what">
+                <li>13-week rolling cash flow model built for your business</li>
+                <li>Weekly cash monitoring and variance tracking</li>
+                <li>Working capital actions — receivables, payables, inventory</li>
+              </ul>
+              <div class="accordion-outcome">
+                <span class="outcome-tag">Outcome</span>
+                <p class="outcome-text">Full visibility and control of your short-term cash. No more surprises. Delivered in 3–5 weeks, fixed fee.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 03 -->
+        <div class="accordion-item reveal" role="listitem">
+          <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+            <span class="accordion-number">03</span>
+            <span class="accordion-title">Profitability &amp; Performance</span>
+            <span class="accordion-icon" aria-hidden="true">+</span>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <ul class="accordion-what">
+                <li>Margin analysis by product, client, and activity</li>
+                <li>Cost structure review and allocation logic</li>
+                <li>Concrete levers with quantified financial impact</li>
+              </ul>
+              <div class="accordion-outcome">
+                <span class="outcome-tag">Outcome</span>
+                <p class="outcome-text">You know exactly where you make money — and what to change first. Delivered in 4–6 weeks, fixed fee.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 04 -->
+        <div class="accordion-item reveal" role="listitem">
+          <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+            <span class="accordion-number">04</span>
+            <span class="accordion-title">Ongoing Support</span>
+            <span class="accordion-icon" aria-hidden="true">+</span>
+          </div>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <ul class="accordion-what">
+                <li>Monthly cash and KPI monitoring</li>
+                <li>Regular financial reviews with management</li>
+                <li>Ad-hoc analysis and decision support as needed</li>
+              </ul>
+              <div class="accordion-outcome">
+                <span class="outcome-tag">Outcome</span>
+                <p class="outcome-text">Control maintained over time — without a permanent finance hire. Monthly retainer.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ WHY SECTION ════════════════════════════════════════════════ -->
+  <section id="why">
+    <div class="container">
+      <div class="two-col">
+        <div class="two-col__sidebar reveal-left">
+          <span class="why-sidebar-label">Why Morety &amp; Nys</span>
+          <h2 class="why-sidebar-heading">Concrete.<br>Senior.<br>Fixed-price.</h2>
+        </div>
+        <div class="two-col__main why-items">
+          <div class="why-item reveal">
+            <span class="why-num">01</span>
+            <div>
+              <div class="why-title">Fast &amp; practical</div>
+              <p class="why-desc">Results in weeks, not months. No lengthy discovery phases. We work with what you have and deliver something usable from day one.</p>
+            </div>
+          </div>
+          <div class="why-item reveal">
+            <span class="why-num">02</span>
+            <div>
+              <div class="why-title">Fixed fees, no surprises</div>
+              <p class="why-desc">Every engagement is priced upfront. No billable hours, no scope creep, no awkward conversations mid-project. You know the number before we start.</p>
+            </div>
+          </div>
+          <div class="why-item reveal">
+            <span class="why-num">03</span>
+            <div>
+              <div class="why-title">Senior, start to finish</div>
+              <p class="why-desc">Principals work directly on every engagement. The person you meet is the person doing the work — not handing it off to a junior on day two.</p>
+            </div>
+          </div>
+          <div class="why-item reveal">
+            <span class="why-num">04</span>
+            <div>
+              <div class="why-title">CFO-level thinking, without the hire</div>
+              <p class="why-desc">Structured financial leadership available when you need it. For businesses that are growing faster than their finance function.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CONTACT ════════════════════════════════════════════════════ -->
+  <section id="contact" class="section">
+    <div class="container">
+      <div class="contact-inner">
+        <div class="contact-left">
+          <div class="contact-label reveal">
+            <span class="contact-label-line"></span>
+            <span class="contact-label-text">Get in touch</span>
+          </div>
+          <h2 class="contact-title reveal">Let's talk<br>about your cash.</h2>
+          <p class="contact-body reveal">
+            A short conversation is enough to know if we can help. No pitch deck, no proposal before we have spoken. We will tell you honestly whether it makes sense to work together — and what we would do.
           </p>
-          <div class="hero-cta-group reveal reveal-d3">
-            <button class="btn-primary" id="openModalHero" aria-haspopup="dialog">
-              → Get Your Financial Health Score
-            </button>
-            <span class="hero-microcopy">Fill in 8 numbers. Get a 1-page report in your inbox. No call required.</span>
-            <a class="hero-ghost-link" href="#contact">Or talk directly →</a>
-          </div>
+          <a class="contact-email-link reveal" href="mailto:moretynys@protonmail.com">
+            moretynys@protonmail.com →
+          </a>
+        </div>
+        <div class="contact-right reveal-right">
+          <a class="cta-circle" href="mailto:moretynys@protonmail.com" aria-label="Write to us">
+            <span class="cta-circle-arrow">↗</span>
+            <span>Write<br>to us</span>
+          </a>
+          <span class="text-small">Response within 24 hours</span>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- SERVICES -->
-    <section id="services">
-      <div class="container">
-        <div class="services-header reveal">
-          <span class="section-tag">01 — What we do</span>
-          <h2 class="services-title">Two things.<br>Done properly.</h2>
-          <p class="services-sub">We don't do everything. We focus where the leverage actually is for owners like you.</p>
+  <!-- ═══ FOOTER ══════════════════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand-name">Morety &amp; Nys</div>
+          <p class="footer-tagline">Financial advisory for growing businesses — cash control, working capital, and profitability.</p>
         </div>
-
-        <div class="pillars-grid">
-          <div class="pillar-card reveal reveal-d1">
-            <span class="pillar-label">Pillar 01</span>
-            <h3 class="pillar-title">Financial Performance</h3>
-            <p class="pillar-desc">You need to know where the leaks are before they become crises. We give you the picture — and then we fix it.</p>
-            <ul class="pillar-list">
-              <li>Financial Health Assessment — your snapshot, scored and ranked</li>
-              <li>Fractional CFO — monthly financial leadership without the headcount</li>
-              <li>Financial Projection &amp; Planning — numbers that survive a bank meeting</li>
-              <li>Business Restructuring — when the structure no longer fits the reality</li>
-            </ul>
-          </div>
-
-          <div class="pillar-card reveal reveal-d2">
-            <span class="pillar-label">Pillar 02</span>
-            <h3 class="pillar-title">Profit &amp; Exit</h3>
-            <p class="pillar-desc">Either keep more money in the business, or get out well. Sometimes both. Both are worth planning for now.</p>
-            <div class="exit-tracks">
-              <div class="exit-track">
-                <div class="exit-track-title">Profit Optimization</div>
-                <p class="exit-track-desc">Stop leaving money on the table. Margin analysis, cost structure, pricing — straight to where it hurts.</p>
-              </div>
-              <div class="exit-track">
-                <div class="exit-track-title">Succession &amp; Exit</div>
-                <p class="exit-track-desc">Ready to sell or hand over? Valuation, deal structure, data room. We've done this before so you don't have to figure it out under pressure.</p>
-              </div>
-            </div>
-          </div>
+        <div>
+          <span class="footer-col-label">Navigation</span>
+          <nav class="footer-nav" aria-label="Footer navigation">
+            <a href="#services">Solutions</a>
+            <a href="#why">Why us</a>
+            <a href="#contact">Contact</a>
+          </nav>
         </div>
-
-        <div class="who-chips reveal">
-          <span class="who-chip">Automotive suppliers &amp; Tier 1–3 manufacturers</span>
-          <span class="who-chip">Long-established SMBs in transition</span>
-          <span class="who-chip">Owners navigating succession or rapid change</span>
+        <div>
+          <span class="footer-col-label">Contact</span>
+          <a class="footer-contact-email" href="mailto:moretynys@protonmail.com">moretynys@protonmail.com</a>
         </div>
       </div>
-    </section>
-
-    <!-- PACKAGES -->
-    <section id="packages">
-      <div class="container">
-        <div class="packages-header reveal">
-          <span class="section-tag on-dark">02 — Packages</span>
-          <h2 class="packages-title">Four entry points.<br>One real question each.</h2>
-          <p class="packages-sub">Pick where you are. We'll tell you what makes sense next.</p>
-        </div>
-
-        <div class="packages-grid reveal reveal-d1">
-          <div class="pkg-card">
-            <h3 class="pkg-name">Financial Health Assessment</h3>
-            <p class="pkg-question">"How strong is my business, actually?"</p>
-            <ul class="pkg-list">
-              <li>Scored 1-page picture of where you stand</li>
-              <li>3 concrete things to act on — ranked by impact</li>
-              <li>Delivered within 5 business days</li>
-            </ul>
-          </div>
-          <div class="pkg-card">
-            <h3 class="pkg-name">Financial Projection &amp; Planning</h3>
-            <p class="pkg-question">"Can I afford this move?"</p>
-            <ul class="pkg-list">
-              <li>Bank- and investor-ready numbers</li>
-              <li>A narrative that holds up under scrutiny</li>
-              <li>Growth scenarios modelled clearly</li>
-            </ul>
-          </div>
-          <div class="pkg-card">
-            <h3 class="pkg-name">Succession &amp; Exit Readiness</h3>
-            <p class="pkg-question">"How do I get out well?"</p>
-            <ul class="pkg-list">
-              <li>Credible, defensible business valuation</li>
-              <li>Deal structure and negotiation prep</li>
-              <li>Clean data room — ready when an offer lands</li>
-            </ul>
-          </div>
-          <div class="pkg-card">
-            <h3 class="pkg-name">Fractional CFO</h3>
-            <p class="pkg-question">"Who keeps an eye on this month to month?"</p>
-            <ul class="pkg-list">
-              <li>Budgets, variances, cash, KPIs — every month</li>
-              <li>Financial leadership without the headcount cost</li>
-              <li>One person who knows your numbers as well as you do</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="packages-footer reveal reveal-d2">
-          <button class="btn-outline" id="openModalPkg" aria-haspopup="dialog">
-            Start with the Financial Health Score →
-          </button>
-          <a href="#contact" class="ghost-link">Or book a 45-min call</a>
-        </div>
+      <div class="footer-bottom">
+        <span class="footer-copy">© 2025 Morety &amp; Nys</span>
       </div>
-    </section>
-
-    <!-- CONTACT -->
-    <section id="contact">
-      <div class="container">
-        <div class="contact-inner">
-          <span class="section-tag reveal">03 — Let's talk</span>
-          <h2 class="contact-title reveal reveal-d1">Not a discovery call.<br>A real conversation.</h2>
-          <p class="contact-sub reveal reveal-d2">
-            45 minutes. We look at your numbers together.
-            If it makes sense to work together, we'll tell you honestly. If not, we'll tell you that too.
-          </p>
-          <form class="contact-form reveal reveal-d3" id="contactForm" novalidate>
-            <div class="form-row">
-              <div class="form-field">
-                <label for="cName">Name</label>
-                <input type="text" id="cName" name="name" placeholder="Your name" autocomplete="name">
-              </div>
-              <div class="form-field">
-                <label for="cCompany">Company</label>
-                <input type="text" id="cCompany" name="company" placeholder="Your company">
-              </div>
-            </div>
-            <div class="form-field">
-              <label for="cEmail">Email</label>
-              <input type="email" id="cEmail" name="email" placeholder="your@email.com" autocomplete="email">
-            </div>
-            <div class="form-field">
-              <label for="cMessage">What's on your mind? <span style="font-weight:300;text-transform:none;letter-spacing:0">(optional)</span></label>
-              <textarea id="cMessage" name="message" placeholder="A question, a situation, or just that you'd like to talk."></textarea>
-            </div>
-            <button type="submit" class="btn-submit" id="contactSubmit">Send →</button>
-          </form>
-        </div>
-      </div>
-    </section>
-
-  </div><!-- /clientView -->
-
-  <!-- ═══════════════════════════════════════════════════════════
-       INTERNAL VIEW
-  ═══════════════════════════════════════════════════════════════ -->
-  <div id="internalView" class="internal-view" hidden>
-
-    <!-- PERSONA -->
-    <section id="int-persona" class="int-section">
-      <div class="container">
-        <span class="section-tag internal">Internal — Client Persona</span>
-        <h2 class="int-title">Who We're Talking To</h2>
-        <p class="int-lead">Before writing anything, sending anything, or saying anything — know this person. Everything we produce is calibrated to them.</p>
-
-        <div class="persona-card">
-          <div class="persona-field">
-            <span class="persona-field-label">Profile</span>
-            <div class="persona-field-value">
-              <strong>The Owner.</strong> 45–65 years old. Runs a business with 15–200 employees. Has been doing this for 10–30 years. Built it themselves or inherited it from family. High on instinct, often low on formal finance — reads P&amp;L but doesn't always trust it.
-            </div>
-          </div>
-          <div class="persona-field">
-            <span class="persona-field-label">Industry</span>
-            <div class="persona-field-value">
-              Manufacturing, automotive supply chain (Tier 1–3), traditional services, logistics, industrial SMBs. Often family-owned. Often in regions with concentrated industrial exposure — automotive corridor, food processing, construction supply.
-            </div>
-          </div>
-          <div class="persona-field">
-            <span class="persona-field-label">Current State of Mind</span>
-            <div class="persona-field-value">
-              Under pressure — but not panicking. Margins are tighter. Costs are up. AI news makes them uneasy. EV disruption, Mercosur, rising energy costs — they see the headlines. They're watching. They want to know: <strong>how strong am I actually?</strong>
-            </div>
-          </div>
-          <div class="persona-field">
-            <span class="persona-field-label">What They Actually Want</span>
-            <div class="persona-field-value">
-              Clarity. To know if the business is solid. To not be surprised. To understand if they can exit in 3–5 years — or if they need to fix something first. And honestly? To talk to someone who actually understands their kind of business.
-            </div>
-          </div>
-          <div class="persona-field">
-            <span class="persona-field-label">What They Don't Want</span>
-            <div class="persona-field-value">
-              Another consultant who doesn't know their industry. Jargon. A slide deck that says "let's align on strategic pillars." Someone who talks about vision while they're dealing with a cash flow gap. <strong>They can smell bullshit immediately.</strong>
-            </div>
-          </div>
-          <div class="persona-field">
-            <span class="persona-field-label">Trigger Moments</span>
-            <div class="persona-field-value">
-              Bank requests updated financials. Key customer is at risk. An offer to buy the business lands unexpectedly. A family member needs to be brought in or bought out. They wake up and realize they don't actually know what the business is worth.
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TONE GUIDE -->
-    <section id="int-tone" class="int-section">
-      <div class="container">
-        <span class="section-tag internal">Internal — Tone &amp; Voice</span>
-        <h2 class="int-title">How We Sound</h2>
-        <p class="int-lead">Every word we write or say should pass the test: "Would a stressed owner roll their eyes at this?" If yes — cut it.</p>
-
-        <div class="tone-grid">
-          <div class="tone-card">
-            <div class="tone-card-title">Direct, not blunt for shock value</div>
-            <div class="tone-example">
-              <em>Say: "Your DSO is 68 days. That's eating your cash."</em>
-              <s>Not: "We leverage dynamic receivables optimisation frameworks."</s>
-            </div>
-          </div>
-          <div class="tone-card">
-            <div class="tone-card-title">Colleague, not consultant</div>
-            <div class="tone-example">
-              <em>We're the person they call before they call their lawyer. We pick up the phone.</em>
-              <s>Not the one who sends a 40-page report and disappears.</s>
-            </div>
-          </div>
-          <div class="tone-card">
-            <div class="tone-card-title">Honest about limits</div>
-            <div class="tone-example">
-              <em>If something isn't our area, we say so. That's what earns trust.</em>
-              <s>Don't oversell. Don't pitch services they don't need yet.</s>
-            </div>
-          </div>
-          <div class="tone-card">
-            <div class="tone-card-title">Serious, not solemn</div>
-            <div class="tone-example">
-              <em>Finance is stressful. Dry humour is fine. Existential gravitas is not.</em>
-              <s>We're not saving their soul. We're fixing their numbers.</s>
-            </div>
-          </div>
-        </div>
-
-        <div class="word-lists">
-          <div>
-            <div class="word-list-title avoid">Words we never use</div>
-            <div class="word-tags">
-              <span class="word-tag avoid">synergies</span>
-              <span class="word-tag avoid">pivot</span>
-              <span class="word-tag avoid">leverage (verb)</span>
-              <span class="word-tag avoid">ecosystem</span>
-              <span class="word-tag avoid">journey</span>
-              <span class="word-tag avoid">best-in-class</span>
-              <span class="word-tag avoid">value proposition</span>
-              <span class="word-tag avoid">holistic</span>
-              <span class="word-tag avoid">mission-driven</span>
-              <span class="word-tag avoid">unlock</span>
-              <span class="word-tag avoid">elevate</span>
-              <span class="word-tag avoid">stakeholders</span>
-            </div>
-          </div>
-          <div>
-            <div class="word-list-title use">Words we like</div>
-            <div class="word-tags">
-              <span class="word-tag use">numbers</span>
-              <span class="word-tag use">control</span>
-              <span class="word-tag use">clear</span>
-              <span class="word-tag use">direct</span>
-              <span class="word-tag use">margin</span>
-              <span class="word-tag use">exit</span>
-              <span class="word-tag use">cash</span>
-              <span class="word-tag use">owner</span>
-              <span class="word-tag use">honest</span>
-              <span class="word-tag use">real</span>
-              <span class="word-tag use">fix</span>
-              <span class="word-tag use">picture</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- INT PACKAGES -->
-    <section id="int-packages" class="int-section">
-      <div class="container">
-        <span class="section-tag internal">Internal — Packages &amp; Pricing</span>
-        <h2 class="int-title">Offer Packages</h2>
-        <p class="int-lead">What we offer, how to sell it, and where it leads. Pricing is internal only — never shown to clients.</p>
-
-        <div class="int-pkg-list">
-          <div class="int-pkg">
-            <div>
-              <div class="int-pkg-name">Financial Health Assessment</div>
-              <div class="int-pkg-trigger">"How strong am I actually?"</div>
-              <span class="int-pkg-price">€3,500–5,000 fixed</span>
-            </div>
-            <div>
-              <span class="int-pkg-col-label">Sales angle &amp; trigger</span>
-              <div class="int-pkg-col-text">Best entry point. Lead with the free score tool — if they're engaged, propose the full Assessment as "let's do this properly." Works well after the 45-min call.<br><br><strong>Red flags:</strong> Owners who want a report to show their bank, not to act on it. Vanity buyers.</div>
-            </div>
-            <div>
-              <span class="int-pkg-col-label">Upsell path</span>
-              <div class="int-pkg-col-text">Leads to Fractional CFO (ongoing) or Projection &amp; Planning (if they want to act on the findings). Occasionally leads to exit readiness if the picture is strong enough to sell.<br><br><strong>Conversion note:</strong> Easiest entry. Use it to start the relationship.</div>
-            </div>
-          </div>
-
-          <div class="int-pkg">
-            <div>
-              <div class="int-pkg-name">Financial Projection &amp; Planning</div>
-              <div class="int-pkg-trigger">"Can I afford this move?"</div>
-              <span class="int-pkg-price">€4,500–7,000 fixed</span>
-            </div>
-            <div>
-              <span class="int-pkg-col-label">Sales angle &amp; trigger</span>
-              <div class="int-pkg-col-text">Triggered by a specific event: bank meeting, new investment, hiring decision, expansion. Lead with: "We'll give you numbers that hold up in a room." Position as deal-enablement, not accounting.<br><br><strong>Red flags:</strong> Clients who need projections for compliance only — no real decision behind them.</div>
-            </div>
-            <div>
-              <span class="int-pkg-col-label">Upsell path</span>
-              <div class="int-pkg-col-text">Often sold alongside Fractional CFO to track actuals vs. plan. Can lead to exit readiness if projections reveal strong enterprise value.<br><br><strong>Note:</strong> Banks and investors will probe these numbers. Deliver something defensible.</div>
-            </div>
-          </div>
-
-          <div class="int-pkg">
-            <div>
-              <div class="int-pkg-name">Succession &amp; Exit Readiness</div>
-              <div class="int-pkg-trigger">"How do I get out well?"</div>
-              <span class="int-pkg-price">€6,000–12,000 fixed</span>
-            </div>
-            <div>
-              <span class="int-pkg-col-label">Sales angle &amp; trigger</span>
-              <div class="int-pkg-col-text">Triggered by age (55+), family dynamics, unexpected offer, or strategic fatigue. Don't push it — let them arrive at it. Open the door gently: "Have you thought about what the business is worth if you wanted to step back?"<br><br><strong>Red flags:</strong> Not ready emotionally. Still identify too strongly with the business.</div>
-            </div>
-            <div>
-              <span class="int-pkg-col-label">Upsell path</span>
-              <div class="int-pkg-col-text">Often requires Projection &amp; Planning as a precursor. May include M&amp;A advisory during a live deal, billed separately.<br><br><strong>Note:</strong> Highest-value engagement. Takes time. Don't rush the close.</div>
-            </div>
-          </div>
-
-          <div class="int-pkg">
-            <div>
-              <div class="int-pkg-name">Fractional CFO</div>
-              <div class="int-pkg-trigger">"Who keeps an eye on this?"</div>
-              <span class="int-pkg-price">€1,800–3,500/month</span>
-            </div>
-            <div>
-              <span class="int-pkg-col-label">Sales angle &amp; trigger</span>
-              <div class="int-pkg-col-text">Sell it as control, not cost. "For less than one full-time salary, you get someone who knows your numbers as well as you do — every month." Best sold after a Health Assessment or Projection engagement.<br><br><strong>Red flags:</strong> Business too small (&lt;€1M revenue) — not enough complexity to justify the ongoing work.</div>
-            </div>
-            <div>
-              <span class="int-pkg-col-label">Upsell path</span>
-              <div class="int-pkg-col-text">Most valuable long-term relationship. Recurring revenue. Often evolves into exit advisory as trust deepens.<br><br><strong>Note:</strong> Scope clearly. Define deliverables per month. Watch for scope creep.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SALES PROCESS -->
-    <section id="int-sales" class="int-section">
-      <div class="container">
-        <span class="section-tag internal">Internal — Sales Process</span>
-        <h2 class="int-title">How a Deal Gets Done</h2>
-        <p class="int-lead">No tricks. No pressure. No pipeline theatre. This is how we move from an interested owner to a signed client.</p>
-
-        <div class="sales-steps">
-          <div class="sales-step">
-            <span class="sales-step-num">Step 01</span>
-            <div class="sales-step-title">First contact or referral</div>
-            <div class="sales-step-desc">Owner reaches out or is referred by a banker, lawyer, or accountant. First response within 24h — voice note or short personal email, not a template. Goal: establish "we're not like the others" in the first 2 minutes.</div>
-          </div>
-          <div class="sales-step">
-            <span class="sales-step-num">Step 02</span>
-            <div class="sales-step-title">Financial Health Score (the hook)</div>
-            <div class="sales-step-desc">Send the link or do it live together on a call. Lowest-friction entry — no commitment, clear value. Always offer: "Even if we don't work together, this is worth doing." Use the score to frame the 45-min conversation.</div>
-          </div>
-          <div class="sales-step">
-            <span class="sales-step-num">Step 03</span>
-            <div class="sales-step-title">45-minute review call</div>
-            <div class="sales-step-desc">Go through the numbers together — don't just present them back, ask questions. Find the one thing that's actually costing them the most. End with a specific, concrete recommendation — not a vague next step. If it's a fit, say so plainly.</div>
-          </div>
-          <div class="sales-step">
-            <span class="sales-step-num">Step 04</span>
-            <div class="sales-step-title">One-page proposal</div>
-            <div class="sales-step-desc">If there's a fit: send a one-pager within 48 hours. What we'll do, what they'll get, what it costs. No Powerpoint. No 20-page methodology doc. One page, plain language, 48 hours — never a week later.</div>
-          </div>
-          <div class="sales-step">
-            <span class="sales-step-num">Step 05</span>
-            <div class="sales-step-title">Close or close the loop</div>
-            <div class="sales-step-desc">If yes: simple agreement, kick-off call within 1 week. If no: "When would be a better time to revisit?" — set a date. Don't chase. Always ask for a referral after 30 days of a successful engagement. Referrals are our best channel.</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </div><!-- /internalView -->
-
-  <!-- ═══ FOOTER ══════════════════════════════════════════════════ -->
-  <footer>
-    <span class="footer-brand">Morety &amp; Nys</span>
-    <span class="footer-meta">Financial Advisory · © 2025</span>
+    </div>
   </footer>
 
-  <!-- ═══ LEAD MAGNET MODAL ══════════════════════════════════════ -->
-  <div class="modal-overlay" id="healthModal" hidden role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal-card" id="modalCard">
-      <button class="modal-close" id="modalClose" aria-label="Close modal">✕</button>
-
-      <div id="modalFormContent">
-        <h2 class="modal-title" id="modalTitle">How strong is your business, actually?</h2>
-        <p class="modal-sub">Fill in 8 numbers. Get a 1-page Financial Health Score in your inbox — with 2–3 things worth acting on. No call required unless you want one.</p>
-
-        <form class="modal-form" id="modalForm" novalidate>
-          <div class="modal-inputs-grid">
-            <div class="modal-field">
-              <label for="m1">Annual Revenue (€)</label>
-              <input type="number" id="m1" placeholder="e.g. 4,200,000" min="0">
-            </div>
-            <div class="modal-field">
-              <label for="m2">Gross Profit Margin (%)</label>
-              <input type="number" id="m2" placeholder="e.g. 38" min="0" max="100">
-            </div>
-            <div class="modal-field">
-              <label for="m3">Operating Profit Margin (%)</label>
-              <input type="number" id="m3" placeholder="e.g. 12">
-            </div>
-            <div class="modal-field">
-              <label for="m4">Cash Runway (months)</label>
-              <input type="number" id="m4" placeholder="e.g. 4" min="0">
-            </div>
-            <div class="modal-field">
-              <label for="m5">Debt-to-Equity Ratio</label>
-              <input type="number" id="m5" placeholder="e.g. 1.4" step="0.1" min="0">
-            </div>
-            <div class="modal-field">
-              <label for="m6">Days Sales Outstanding (DSO)</label>
-              <input type="number" id="m6" placeholder="e.g. 52" min="0">
-            </div>
-            <div class="modal-field">
-              <label for="m7">Revenue Growth vs. Last Year (%)</label>
-              <input type="number" id="m7" placeholder="e.g. +8 or -3">
-            </div>
-            <div class="modal-field">
-              <label for="m8">Top 3 customers = % of revenue</label>
-              <input type="number" id="m8" placeholder="e.g. 62" min="0" max="100">
-            </div>
-          </div>
-
-          <div class="modal-email-section">
-            <label class="modal-email-label" for="mEmail">Where should we send your report?</label>
-            <input type="email" id="mEmail" class="modal-email-input" placeholder="your@email.com" autocomplete="email" required>
-          </div>
-
-          <button type="submit" class="modal-submit" id="modalSubmit">Send Me My Score →</button>
-        </form>
-      </div>
-
-      <div id="modalSuccessContent" hidden>
-        <div class="modal-success">
-          <div class="modal-success-check">✓</div>
-          <h2 class="modal-success-title">Your report is on its way.</h2>
-          <p class="modal-success-text">
-            We'll run through your numbers and send you a 1-page Financial Health Score within 24 hours.
-            If we spot anything worth a conversation, we'll say so plainly.
-            Otherwise, it's yours to act on.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══ SCRIPT ══════════════════════════════════════════════════ -->
+  <!-- ═══ SCRIPT ══════════════════════════════════════════════════════ -->
   <script>
-    // ── 1. VIEW TOGGLE ─────────────────────────────────────────────
-    const clientView      = document.getElementById('clientView');
-    const internalView    = document.getElementById('internalView');
-    const navClient       = document.getElementById('navClient');
-    const navInternal     = document.getElementById('navInternal');
-    const toggleBtns      = document.querySelectorAll('.view-toggle-btn');
-    const warningBadge    = document.querySelector('.internal-warning');
-
-    function setView(view) {
-      const isInternal = view === 'internal';
-
-      clientView.hidden   = isInternal;
-      internalView.hidden = !isInternal;
-      navClient.hidden    = isInternal;
-      navInternal.hidden  = !isInternal;
-
-      toggleBtns.forEach(btn => {
-        const active = btn.dataset.view === view;
-        btn.classList.toggle('active', active);
-        btn.setAttribute('aria-pressed', String(active));
-      });
-
-      warningBadge.style.opacity = isInternal ? '1' : '0';
-      document.body.dataset.view = view;
-      window.scrollTo({ top: 0, behavior: 'instant' });
-
-      if (isInternal) {
-        internalView.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
-      }
+    // ── 0. ROTATING HEADLINE ────────────────────────────────────────
+    const rotatingPhrases = [
+      'founder-led businesses.',
+      'scaling SMBs without visibility.',
+      'companies outpacing their finance.',
+      'teams managing cash by instinct.'
+    ];
+    let rotatingIndex = 0;
+    const rotatingEl = document.getElementById('rotatingPhrase');
+    if (rotatingEl) {
+      setInterval(() => {
+        rotatingEl.classList.add('fade');
+        setTimeout(() => {
+          rotatingIndex = (rotatingIndex + 1) % rotatingPhrases.length;
+          rotatingEl.textContent = rotatingPhrases[rotatingIndex];
+          rotatingEl.classList.remove('fade');
+        }, 500);
+      }, 4500);
     }
 
-    setView('client');
+    // ── 1. NAV SHADOW + SCROLL PROGRESS ────────────────────────────
+    const nav = document.getElementById('mainNav');
+    const scrollProgress = document.getElementById('scrollProgress');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+      if (scrollProgress) {
+        const total = document.documentElement.scrollHeight - window.innerHeight;
+        scrollProgress.style.width = (window.scrollY / total * 100) + '%';
+      }
+    }, { passive: true });
 
-    toggleBtns.forEach(btn => {
-      btn.addEventListener('click', () => setView(btn.dataset.view));
+    // ── 2. SCROLL REVEAL (up / left / right) ────────────────────────
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        entry.target.classList.toggle('is-visible', entry.isIntersecting);
+      });
+    }, { threshold: 0.1, rootMargin: '-15px 0px' });
+
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => revealObserver.observe(el));
+
+    // ── 3. STATEMENT LINE REVEAL ────────────────────────────────────
+    const statementEl = document.getElementById('statementText');
+    if (statementEl) {
+      const lineObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.querySelectorAll('.line-reveal-inner').forEach((line, i) => {
+              setTimeout(() => line.classList.add('is-visible'), i * 150);
+            });
+          } else {
+            entry.target.querySelectorAll('.line-reveal-inner').forEach(line => {
+              line.classList.remove('is-visible');
+            });
+          }
+        });
+      }, { threshold: 0.25 });
+      lineObserver.observe(statementEl);
+    }
+
+    // ── 4. PAIN BORDER GROW ─────────────────────────────────────────
+    const painInner = document.querySelector('.pain-inner');
+    if (painInner) {
+      const borderObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          entry.target.classList.toggle('border-grown', entry.isIntersecting);
+        });
+      }, { threshold: 0.1 });
+      borderObserver.observe(painInner);
+    }
+
+    // ── 5. WHY NUMBERS COUNT-UP ─────────────────────────────────────
+    document.querySelectorAll('.why-num').forEach((el, i) => {
+      const target = i + 1;
+      const pad = n => String(n).padStart(2, '0');
+      let countInterval = null;
+      const numObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            clearInterval(countInterval);
+            let count = 0;
+            el.textContent = pad(0);
+            countInterval = setInterval(() => {
+              count++;
+              el.textContent = pad(count);
+              if (count >= target) clearInterval(countInterval);
+            }, 90);
+          }
+        });
+      }, { threshold: 0.5 });
+      numObserver.observe(el);
     });
 
-    // ── 2. SCROLL REVEAL ───────────────────────────────────────────
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
+    // ── 6. ACCORDION — hover on desktop, click on touch ─────────────
+    const hasFinePointer = () => window.matchMedia('(pointer: fine)').matches;
+
+    document.querySelectorAll('.accordion-item').forEach(item => {
+      const header = item.querySelector('.accordion-header');
+      let closeTimer = null;
+
+      function openItem() {
+        clearTimeout(closeTimer);
+        document.querySelectorAll('.accordion-item').forEach(i => {
+          if (i !== item) {
+            i.classList.remove('is-open');
+            i.querySelector('.accordion-header').setAttribute('aria-expanded', 'false');
+          }
+        });
+        item.classList.add('is-open');
+        header.setAttribute('aria-expanded', 'true');
+      }
+
+      function scheduleClose() {
+        closeTimer = setTimeout(() => {
+          item.classList.remove('is-open');
+          header.setAttribute('aria-expanded', 'false');
+        }, 220);
+      }
+
+      // Desktop: hover open / hover-away close
+      item.addEventListener('mouseenter', () => {
+        if (hasFinePointer()) { clearTimeout(closeTimer); openItem(); }
+      });
+      item.addEventListener('mouseleave', () => {
+        if (hasFinePointer()) scheduleClose();
+      });
+
+      // Touch: click toggle
+      header.addEventListener('click', () => {
+        if (!hasFinePointer()) {
+          const wasOpen = item.classList.contains('is-open');
+          document.querySelectorAll('.accordion-item').forEach(i => {
+            i.classList.remove('is-open');
+            i.querySelector('.accordion-header').setAttribute('aria-expanded', 'false');
+          });
+          if (!wasOpen) openItem();
         }
       });
-    }, { threshold: 0.1, rootMargin: '-30px 0px' });
 
-    document.querySelectorAll('#clientView .reveal').forEach(el => observer.observe(el));
-
-    // ── 3. MODAL ───────────────────────────────────────────────────
-    const modal               = document.getElementById('healthModal');
-    const modalClose          = document.getElementById('modalClose');
-    const modalForm           = document.getElementById('modalForm');
-    const modalSubmit         = document.getElementById('modalSubmit');
-    const modalFormContent    = document.getElementById('modalFormContent');
-    const modalSuccessContent = document.getElementById('modalSuccessContent');
-    const mEmail              = document.getElementById('mEmail');
-
-    let lastTrigger = null;
-
-    function openModal(trigger) {
-      lastTrigger = trigger || null;
-      modal.hidden = false;
-      document.body.style.overflow = 'hidden';
-      modalClose.focus();
-      modalFormContent.hidden    = false;
-      modalSuccessContent.hidden = true;
-      modalSubmit.disabled       = false;
-      modalSubmit.textContent    = 'Send Me My Score →';
-      mEmail.style.borderColor   = '';
-    }
-
-    function closeModal() {
-      modal.hidden = true;
-      document.body.style.overflow = '';
-      if (lastTrigger) lastTrigger.focus();
-    }
-
-    document.getElementById('openModalHero').addEventListener('click', function() { openModal(this); });
-    document.getElementById('openModalPkg').addEventListener('click',  function() { openModal(this); });
-
-    modalClose.addEventListener('click', closeModal);
-    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
-
-    // Focus trap
-    modal.addEventListener('keydown', e => {
-      if (e.key !== 'Tab') return;
-      const focusable = Array.from(modal.querySelectorAll('button:not([disabled]), input, textarea'))
-        .filter(el => !el.closest('[hidden]'));
-      const first = focusable[0];
-      const last  = focusable[focusable.length - 1];
-      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-    });
-
-    // Simulated submit
-    modalForm.addEventListener('submit', e => {
-      e.preventDefault();
-      const email = mEmail.value.trim();
-      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        mEmail.style.borderColor = '#ef4444';
-        mEmail.focus();
-        setTimeout(() => { mEmail.style.borderColor = ''; }, 1500);
-        return;
-      }
-      modalSubmit.disabled    = true;
-      modalSubmit.textContent = 'Analysing…';
-      setTimeout(() => {
-        modalFormContent.hidden    = true;
-        modalSuccessContent.hidden = false;
-        modalClose.focus();
-      }, 1400);
-    });
-
-    // ── 4. CONTACT FORM (simulated) ────────────────────────────────
-    document.getElementById('contactForm').addEventListener('submit', e => {
-      e.preventDefault();
-      const btn = document.getElementById('contactSubmit');
-      btn.textContent = 'Sent.';
-      btn.disabled    = true;
-      btn.style.background = '#374151';
+      // Keyboard accessibility
+      header.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          const wasOpen = item.classList.contains('is-open');
+          document.querySelectorAll('.accordion-item').forEach(i => {
+            i.classList.remove('is-open');
+            i.querySelector('.accordion-header').setAttribute('aria-expanded', 'false');
+          });
+          if (!wasOpen) openItem();
+        }
+      });
     });
   </script>
 
